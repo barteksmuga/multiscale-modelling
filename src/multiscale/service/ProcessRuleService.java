@@ -1,6 +1,7 @@
 package multiscale.service;
 
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.paint.Color;
 import multiscale.helpers.RuleDictionary;
 import multiscale.model.Cell;
@@ -8,6 +9,7 @@ import multiscale.model.ProcessRuleProperties;
 
 import javafx.scene.control.TableView;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -37,8 +39,16 @@ public class ProcessRuleService {
                 cellCheckSum += getPreviousCellState(grid, step, cell - 1) << 2;
                 grid[step + 1][cell].setState(rule.get(cellCheckSum));
             }
-            tableView.setItems(FXCollections.observableArrayList(grid[step]));
         }
+        appendToTableView(grid);
+    }
+
+    private void appendToTableView(Cell[][] grid) {
+        ObservableList<ObservableList<Cell>> data = FXCollections.observableArrayList();
+        for (Cell [] row : grid) {
+            data.add(FXCollections.observableArrayList(row));
+        }
+        tableView.setItems(data);
     }
 
     private int getNextCellState(Cell[][] grid, int step, int cell) {

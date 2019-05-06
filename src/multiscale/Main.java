@@ -12,7 +12,9 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception{
         Parent root = FXMLLoader.load(getClass().getResource("./view/main.fxml"));
         primaryStage.setTitle("Multi-scale modeling");
-        primaryStage.setScene(new Scene(root, 700, 630));
+        Scene scene = new Scene(root, 700, 630);
+        scene.getStylesheets().add(getClass().getResource("./css/main.css").toExternalForm());
+        primaryStage.setScene(scene);
         primaryStage.show();
     }
 
