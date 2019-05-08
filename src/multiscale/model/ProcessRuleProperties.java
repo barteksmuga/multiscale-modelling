@@ -1,10 +1,13 @@
 package multiscale.model;
 
+import java.util.List;
+
 public class ProcessRuleProperties {
     private Cell[][] grid;
     private Integer ruleInd;
     private Integer gridWidth;
     private Integer gridHeight;
+    private Cell[][] firstRow;
 
     public ProcessRuleProperties() {
     }
@@ -22,6 +25,14 @@ public class ProcessRuleProperties {
                 grid[i][j] = new Cell();
             }
         }
+    }
+
+    public Cell[][] getFirstRow() {
+        return firstRow;
+    }
+
+    public void setFirstRow(Cell[][] firstRow) {
+        this.firstRow = firstRow;
     }
 
     public Integer getGridWidth() {
