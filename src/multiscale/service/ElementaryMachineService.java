@@ -5,15 +5,15 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.TableView;
 import multiscale.helpers.RuleDictionary;
 import multiscale.model.Cell;
-import multiscale.model.ProcessRuleProperties;
+import multiscale.model.ElementaryMachineProperties;
 
 import java.util.List;
 
-public class ProcessRuleService {
-    private ProcessRuleProperties properties;
+public class ElementaryMachineService {
+    private ElementaryMachineProperties properties;
     private TableView tableView;
 
-    public ProcessRuleService(ProcessRuleProperties properties, TableView tableView) {
+    public ElementaryMachineService(ElementaryMachineProperties properties, TableView tableView) {
         this.properties = properties;
         this.tableView = tableView;
     }

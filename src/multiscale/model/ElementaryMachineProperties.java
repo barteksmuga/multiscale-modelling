@@ -2,17 +2,17 @@ package multiscale.model;
 
 import java.util.List;
 
-public class ProcessRuleProperties {
+public class ElementaryMachineProperties {
     private Cell[][] grid;
     private Integer ruleInd;
     private Integer gridWidth;
     private Integer gridHeight;
     private Cell[][] firstRow;
 
-    public ProcessRuleProperties() {
+    public ElementaryMachineProperties() {
     }
 
-    public ProcessRuleProperties(Integer gridHeight, Integer gridWidth) {
+    public ElementaryMachineProperties(Integer gridHeight, Integer gridWidth) {
         this.gridHeight = gridHeight;
         this.gridWidth = gridWidth;
         initGrid();
