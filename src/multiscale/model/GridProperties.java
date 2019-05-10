@@ -2,17 +2,18 @@ package multiscale.model;
 
 import java.util.List;
 
-public class ElementaryMachineProperties {
+public class GridProperties {
     private Cell[][] grid;
     private Integer ruleInd;
+    private String condition;
     private Integer gridWidth;
     private Integer gridHeight;
     private Cell[][] firstRow;
 
-    public ElementaryMachineProperties() {
+    public GridProperties() {
     }
 
-    public ElementaryMachineProperties(Integer gridHeight, Integer gridWidth) {
+    public GridProperties(Integer gridHeight, Integer gridWidth) {
         this.gridHeight = gridHeight;
         this.gridWidth = gridWidth;
         initGrid();
@@ -25,6 +26,14 @@ public class ElementaryMachineProperties {
                 grid[i][j] = new Cell();
             }
         }
+    }
+
+    public String getCondition() {
+        return condition;
+    }
+
+    public void setCondition(String condition) {
+        this.condition = condition;
     }
 
     public Cell[][] getFirstRow() {

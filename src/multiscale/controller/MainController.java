@@ -15,28 +15,43 @@ import java.util.logging.Logger;
 public class MainController {
     private final Logger logger = Logger.getLogger(getClass().getName());
 
-    @FXML Button elementaryMachineButton;
-    @FXML Button gameOfLifeButton;
+    @FXML
+    Button elementaryMachineButton;
+    @FXML
+    Button gameOfLifeButton;
 
     private final String elementaryMachineView = "../view/elementaryMachines.fxml";
     private final String gameOfLifeView = "../view/gameOfLife.fxml";
 
     public void openElementaryMachineWindow(ActionEvent actionEvent) {
-        Parent root;
-        try {
-            root = FXMLLoader.load(getClass().getResource(elementaryMachineView));
-            Stage stage = new Stage();
-            stage.setTitle("Elementary machines");
-            Scene scene = new Scene(root, 1200, 800);
-            scene.getStylesheets().add(getClass().getResource("../css/main.css").toExternalForm());
-            stage.setScene(scene);
+        Stage stage = createStage("Elementary machines", elementaryMachineView);
+        if (stage != null) {
             stage.show();
-        } catch (IOException e) {
-            logger.log(Level.SEVERE, "Creating new window failed");
         }
     }
 
     public void openGameOfLifeWindow(ActionEvent actionEvent) {
+        //TODO: move all strings to one place
+        Stage stage = createStage("Game of life", gameOfLifeView);
+        if (stage != null) {
+            stage.show();
+        }
+    }
 
+    private Stage createStage(String title, String pathToView) {
+        Parent root;
+        try {
+            root = FXMLLoader.load(getClass().getResource(pathToView));
+            Stage stage = new Stage();
+            stage.setTitle(title);
+            //TODO: move this to one place
+            Scene scene = new Scene(root, 1200, 800);
+            scene.getStylesheets().add(getClass().getResource("../css/main.css").toExternalForm());
+            stage.setScene(scene);
+            return stage;
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, "Creating " + title + "window failed");
+            return null;
+        }
     }
 }

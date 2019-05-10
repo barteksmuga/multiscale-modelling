@@ -16,7 +16,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import multiscale.helpers.ValuesHelper;
 import multiscale.model.Cell;
-import multiscale.model.ElementaryMachineProperties;
+import multiscale.model.GridProperties;
 import multiscale.service.ElementaryMachineService;
 
 public class ElementaryMachinesController {
@@ -29,7 +29,7 @@ public class ElementaryMachinesController {
     @FXML TextArea infoArea;
 
     private Integer chosenRule;
-    private ElementaryMachineProperties properties;
+    private GridProperties properties;
     private boolean isDrawButtonClicked = false;
 
     private final String activeClass = "active-cell";
@@ -37,7 +37,7 @@ public class ElementaryMachinesController {
 
     @FXML
     public void initialize () {
-        ruleSelect.setItems(ValuesHelper.getChoiceBoxOptions());
+        ruleSelect.setItems(ValuesHelper.getElementaryMachineRuleList());
         fillInfoArea();
     }
 
@@ -74,6 +74,7 @@ public class ElementaryMachinesController {
     }
 
     public void drawFirstRow(ActionEvent actionEvent) {
+        //TODO: move this to values class(dictionary)
         final String [] cellStyles = {activeClass, inactiveClass};
         properties = createProcessRuleProperties();
         if (isDrawButtonClicked || properties == null) {
@@ -83,6 +84,7 @@ public class ElementaryMachinesController {
         Cell [][] firstRow = new Cell[1][properties.getGridWidth()];
         for (int i=0; i<properties.getGridWidth(); ++i) {
             final int columnIndex = i;
+            //TODO: consider refactoring lines below && maybe builder for grid??
             final TableColumn<ObservableList<Cell>, Integer> column = new TableColumn<>(String.valueOf(columnIndex + 1));
             column.setCellValueFactory(cellValue -> new ReadOnlyObjectWrapper<>(cellValue.getValue().get(columnIndex).getState()));
             column.setCellFactory(cellFactory -> {
@@ -112,26 +114,24 @@ public class ElementaryMachinesController {
                 return tableCell;
             });
             column.setSortable(Boolean.FALSE);
+            //TODO: values in one place!!
             column.setMinWidth(30);
             column.setMaxWidth(30);
             tableView.getColumns().add(column);
             firstRow[0][columnIndex] = new Cell();
         }
-        ObservableList<ObservableList<Cell>> data = FXCollections.observableArrayList();
-        for (Cell [] row : firstRow) {
-            data.add(FXCollections.observableArrayList(row));
-        }
+        ObservableList<ObservableList<Cell>> data = ValuesHelper.prepareDataList(firstRow);
         tableView.setItems(data);
         properties.setFirstRow(firstRow);
     }
 
-    private ElementaryMachineProperties createProcessRuleProperties() {
+    private GridProperties createProcessRuleProperties() {
         if (!checkRequiredFields()) {
             return null;
         }
         Integer height = Integer.valueOf(gridHeight.getText());
         Integer width = Integer.valueOf(gridWidth.getText());
-        return new ElementaryMachineProperties(height, width);
+        return new GridProperties(height, width);
     }
 
     private boolean checkRequiredFields() {

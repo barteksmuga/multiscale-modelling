@@ -4,16 +4,17 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableView;
 import multiscale.helpers.RuleDictionary;
+import multiscale.helpers.ValuesHelper;
 import multiscale.model.Cell;
-import multiscale.model.ElementaryMachineProperties;
+import multiscale.model.GridProperties;
 
 import java.util.List;
 
 public class ElementaryMachineService {
-    private ElementaryMachineProperties properties;
+    private GridProperties properties;
     private TableView tableView;
 
-    public ElementaryMachineService(ElementaryMachineProperties properties, TableView tableView) {
+    public ElementaryMachineService(GridProperties properties, TableView tableView) {
         this.properties = properties;
         this.tableView = tableView;
     }
@@ -34,10 +35,7 @@ public class ElementaryMachineService {
     }
 
     private void appendToTableView(Cell[][] grid) {
-        ObservableList<ObservableList<Cell>> data = FXCollections.observableArrayList();
-        for (Cell [] row : grid) {
-            data.add(FXCollections.observableArrayList(row));
-        }
+        ObservableList<ObservableList<Cell>> data = ValuesHelper.prepareDataList(grid);
         tableView.setItems(data);
     }
 

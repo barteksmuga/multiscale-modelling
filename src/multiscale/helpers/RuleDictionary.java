@@ -13,19 +13,13 @@ public class RuleDictionary {
         return map.get(index);
     }
 
-
     private static Map<Integer, List<Integer>> initializeMap() {
         Map<Integer, List<Integer>> map = new HashMap<>();
-        List<Integer> rule30 = createRule30();
-        map.put(30, rule30);
-        List<Integer> rule60 = createRule60();
-        map.put(60, rule60);
-        List<Integer> rule90 = createRule90();
-        map.put(90, rule90);
-        List<Integer> rule120 = createRule120();
-        map.put(120, rule120);
-        List<Integer> rule225 = createRule225();
-        map.put(225, rule225);
+        map.put(30, createRule30());
+        map.put(60, createRule60());
+        map.put(90, createRule90());
+        map.put(120, createRule120());
+        map.put(225, createRule225());
         return map;
     }
 
