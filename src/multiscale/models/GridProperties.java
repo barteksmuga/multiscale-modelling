@@ -1,6 +1,4 @@
-package multiscale.model;
-
-import java.util.List;
+package multiscale.models;
 
 public class GridProperties {
     private Cell[][] grid;

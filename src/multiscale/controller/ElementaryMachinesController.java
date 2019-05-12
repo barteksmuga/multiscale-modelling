@@ -1,26 +1,23 @@
 package multiscale.controller;
 
-import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.AccessibleAttribute;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.input.MouseEvent;
-import multiscale.helpers.ValuesHelper;
-import multiscale.model.Cell;
-import multiscale.model.GridProperties;
-import multiscale.service.ElementaryMachineService;
+import multiscale.helpers.RuleDictionary;
+import multiscale.models.Cell;
+import multiscale.models.GridProperties;
+import multiscale.services.process.ElementaryMachineProcessService;
+import multiscale.services.tableView.TableViewService;
 
 public class ElementaryMachinesController {
-    @FXML TableView tableView;
+    @FXML TableView<ObservableList<Cell>> tableView;
     @FXML Button startButton;
     @FXML Button drawFirstRowButton;
     @FXML ChoiceBox<String> ruleSelect;
@@ -29,15 +26,14 @@ public class ElementaryMachinesController {
     @FXML TextArea infoArea;
 
     private Integer chosenRule;
-    private GridProperties properties;
+    private GridProperties gridProperties;
     private boolean isDrawButtonClicked = false;
-
-    private final String activeClass = "active-cell";
-    private final String inactiveClass = "inactive-cell";
+    private TableViewService tableViewService;
 
     @FXML
     public void initialize () {
-        ruleSelect.setItems(ValuesHelper.getElementaryMachineRuleList());
+        tableViewService = new TableViewService(tableView);
+        ruleSelect.setItems(RuleDictionary.getElementaryMachineRuleList());
         fillInfoArea();
     }
 
@@ -54,8 +50,8 @@ public class ElementaryMachinesController {
             return;
         }
         lockTableView();
-        properties.setRuleInd(chosenRule);
-        ElementaryMachineService service = new ElementaryMachineService(properties, tableView);
+        gridProperties.setRuleInd(chosenRule);
+        ElementaryMachineProcessService service = new ElementaryMachineProcessService(tableViewService, gridProperties);
         appendTextToInfoArea("\nSymulacja rozpoczęta...");
         service.run();
         appendTextToInfoArea("...Symulacja zakończona");
@@ -74,55 +70,22 @@ public class ElementaryMachinesController {
     }
 
     public void drawFirstRow(ActionEvent actionEvent) {
-        //TODO: move this to values class(dictionary)
-        final String [] cellStyles = {activeClass, inactiveClass};
-        properties = createProcessRuleProperties();
-        if (isDrawButtonClicked || properties == null) {
+        gridProperties = createProcessRuleProperties();
+        if (isDrawButtonClicked || gridProperties == null) {
             return;
         }
         isDrawButtonClicked = true;
-        Cell [][] firstRow = new Cell[1][properties.getGridWidth()];
-        for (int i=0; i<properties.getGridWidth(); ++i) {
-            final int columnIndex = i;
-            //TODO: consider refactoring lines below && maybe builder for grid??
-            final TableColumn<ObservableList<Cell>, Integer> column = new TableColumn<>(String.valueOf(columnIndex + 1));
-            column.setCellValueFactory(cellValue -> new ReadOnlyObjectWrapper<>(cellValue.getValue().get(columnIndex).getState()));
-            column.setCellFactory(cellFactory -> {
-                TableCell<ObservableList<Cell>, Integer> tableCell = new TableCell<ObservableList<Cell>, Integer>() {
-                    @Override
-                    protected void updateItem(Integer item, boolean empty) {
-                        super.updateItem(item, empty);
-                        setText(" ");
-                        getStyleClass().removeAll(cellStyles);
-                        if (item != null && item == 1) {
-                            getStyleClass().add(activeClass);
-                        } else if (!empty){
-                            getStyleClass().add(inactiveClass);
-                        }
-                    }
+        Cell[][] firstRow = prepareFirstRow();
+        gridProperties.setFirstRow(firstRow);
+        tableViewService.prepareTableView(gridProperties);
+    }
 
-                };
-                tableCell.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
-                    if (tableView.isEditable()) {
-                        TableCell cell = (TableCell) event.getSource();
-                        cell.getStyleClass().removeAll(cellStyles);
-                        int cellIndex = (int) cell.queryAccessibleAttribute(AccessibleAttribute.COLUMN_INDEX);
-                        firstRow[0][cellIndex].changeState();
-                        cell.getStyleClass().add(firstRow[0][cellIndex].getState() == 0 ? inactiveClass : activeClass);
-                    }
-                });
-                return tableCell;
-            });
-            column.setSortable(Boolean.FALSE);
-            //TODO: values in one place!!
-            column.setMinWidth(30);
-            column.setMaxWidth(30);
-            tableView.getColumns().add(column);
-            firstRow[0][columnIndex] = new Cell();
+    private Cell[][] prepareFirstRow() {
+        Cell [][] firstRow = new Cell[1][gridProperties.getGridWidth()];
+        for (int i=0; i<gridProperties.getGridWidth(); ++i) {
+            firstRow[0][i] = new Cell();
         }
-        ObservableList<ObservableList<Cell>> data = ValuesHelper.prepareDataList(firstRow);
-        tableView.setItems(data);
-        properties.setFirstRow(firstRow);
+        return firstRow;
     }
 
     private GridProperties createProcessRuleProperties() {
@@ -149,7 +112,7 @@ public class ElementaryMachinesController {
         gridWidth.setText("");
         gridHeight.setText("");
         tableView.setItems(FXCollections.observableArrayList());
-        ObservableList<TableColumn> tableColumns = tableView.getColumns();
+        ObservableList<TableColumn<ObservableList<Cell>, ?>> tableColumns = tableView.getColumns();
         tableView.getColumns().removeAll(tableColumns);
         clearRuleSelection();
     }
@@ -160,13 +123,13 @@ public class ElementaryMachinesController {
     }
 
     private void clearProperties() {
-        if (properties == null) {
+        if (gridProperties == null) {
             return;
         }
-        properties.setGridHeight(0);
-        properties.setGridWidth(0);
-        properties.setRuleInd(null);
-        properties.setGrid(new Cell[0][0]);
+        gridProperties.setGridHeight(0);
+        gridProperties.setGridWidth(0);
+        gridProperties.setRuleInd(null);
+        gridProperties.setGrid(new Cell[0][0]);
     }
 
     private void unlockFlags() {

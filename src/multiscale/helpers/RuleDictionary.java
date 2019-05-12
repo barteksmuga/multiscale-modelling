@@ -1,5 +1,9 @@
 package multiscale.helpers;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import multiscale.enums.RuleEnum;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -8,6 +12,10 @@ import java.util.Map;
 public class RuleDictionary {
 
     private final static Map<Integer, List<Integer>> map = initializeMap();
+
+    public static ObservableList<String> getElementaryMachineRuleList() {
+        return FXCollections.observableArrayList(RuleEnum.getNames());
+    }
 
     public static List<Integer> getRule (int index) {
         return map.get(index);

@@ -6,15 +6,17 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import static multiscale.helpers.constants.SizeConstants.MAIN_SCENE_HEIGHT;
+import static multiscale.helpers.constants.SizeConstants.MAIN_SCENE_WIDTH;
+
 
 public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("./view/main.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("views/main.fxml"));
         primaryStage.setTitle("Multi-scale modeling");
-        //TODO: move this to one place
-        Scene scene = new Scene(root, 800, 700);
+        Scene scene = new Scene(root, MAIN_SCENE_WIDTH, MAIN_SCENE_HEIGHT);
         primaryStage.setScene(scene);
         primaryStage.show();
     }

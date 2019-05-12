@@ -1,4 +1,4 @@
-package multiscale.model;
+package multiscale.models;
 
 public class Point {
     public int x, y;

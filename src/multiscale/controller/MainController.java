@@ -12,6 +12,9 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static multiscale.helpers.constants.SizeConstants.CHILD_SCENE_HEIGHT;
+import static multiscale.helpers.constants.SizeConstants.CHILD_SCENE_WIDTH;
+
 public class MainController {
     private final Logger logger = Logger.getLogger(getClass().getName());
 
@@ -20,8 +23,8 @@ public class MainController {
     @FXML
     Button gameOfLifeButton;
 
-    private final String elementaryMachineView = "../view/elementaryMachines.fxml";
-    private final String gameOfLifeView = "../view/gameOfLife.fxml";
+    private final String elementaryMachineView = "../views/elementaryMachines.fxml";
+    private final String gameOfLifeView = "../views/gameOfLife.fxml";
 
     public void openElementaryMachineWindow(ActionEvent actionEvent) {
         Stage stage = createStage("Elementary machines", elementaryMachineView);
@@ -31,7 +34,6 @@ public class MainController {
     }
 
     public void openGameOfLifeWindow(ActionEvent actionEvent) {
-        //TODO: move all strings to one place
         Stage stage = createStage("Game of life", gameOfLifeView);
         if (stage != null) {
             stage.show();
@@ -44,8 +46,7 @@ public class MainController {
             root = FXMLLoader.load(getClass().getResource(pathToView));
             Stage stage = new Stage();
             stage.setTitle(title);
-            //TODO: move this to one place
-            Scene scene = new Scene(root, 1200, 800);
+            Scene scene = new Scene(root, CHILD_SCENE_WIDTH, CHILD_SCENE_HEIGHT);
             scene.getStylesheets().add(getClass().getResource("../css/main.css").toExternalForm());
             stage.setScene(scene);
             return stage;

@@ -1,4 +1,4 @@
-package multiscale.model;
+package multiscale.models;
 
 import java.util.concurrent.atomic.AtomicInteger;
 

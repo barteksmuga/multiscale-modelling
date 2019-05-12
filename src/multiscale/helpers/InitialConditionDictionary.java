@@ -1,8 +1,10 @@
 package multiscale.helpers;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import multiscale.enums.InitialConditionEnum;
-import multiscale.model.GridProperties;
-import multiscale.model.Point;
+import multiscale.models.GridProperties;
+import multiscale.models.Point;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +12,10 @@ import java.util.Random;
 
 public class InitialConditionDictionary {
     private static Random random = new Random();
+
+    public static ObservableList<String> getGameOfLifeInitialConditionList() {
+        return FXCollections.observableArrayList(InitialConditionEnum.getNames());
+    }
 
     public static List<Point> getCondition(InitialConditionEnum key, GridProperties gridProperties) {
         return createChosenCondition(key, gridProperties);

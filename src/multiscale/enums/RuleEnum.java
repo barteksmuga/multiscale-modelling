@@ -3,16 +3,16 @@ package multiscale.enums;
 import java.util.ArrayList;
 import java.util.List;
 
-public enum InitialConditionEnum {
-    FIXED("Niezmienny"),
-    GLIDER("Glider"),
-    OSCILLATOR("Oscylator"),
-    CUSTOM("Ręczna definicja"),
-    RANDOM("Losowy");
+public enum RuleEnum {
+    RULE_30("30"),
+    RULE_60("60"),
+    RULE_90("90"),
+    RULE_120("120"),
+    RULE_225("225");
 
     private String name;
 
-    InitialConditionEnum(String name) {
+    RuleEnum(String name) {
         this.name = name;
     }
 
@@ -20,8 +20,8 @@ public enum InitialConditionEnum {
         return name;
     }
 
-    public static InitialConditionEnum get(String value) {
-        for(InitialConditionEnum tmp : values()) {
+    public static RuleEnum get(String value) {
+        for(RuleEnum tmp : values()) {
             if (tmp.getName().equals(value)) {
                 return tmp;
             }
@@ -31,7 +31,7 @@ public enum InitialConditionEnum {
 
     public static List<String> getNames() {
         List<String> names = new ArrayList<>();
-        for (InitialConditionEnum rule : values()) {
+        for (RuleEnum rule : values()) {
             names.add(rule.getName());
         }
         return names;

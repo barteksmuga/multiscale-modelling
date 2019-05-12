@@ -1,19 +1,13 @@
-package multiscale.service;
+package multiscale.services.process;
 
-import javafx.collections.ObservableList;
-import javafx.scene.control.TableView;
-import multiscale.helpers.ValuesHelper;
-import multiscale.model.Cell;
-import multiscale.model.GridProperties;
+import multiscale.models.Cell;
+import multiscale.models.GridProperties;
+import multiscale.services.tableView.TableViewService;
 
+public class GameOfLifeProcessService extends ProcessService {
 
-public class GameOfLifeService {
-    private TableView tableView;
-    private GridProperties gridProperties;
-
-    public GameOfLifeService(TableView tableView, GridProperties gridProperties) {
-        this.tableView = tableView;
-        this.gridProperties = gridProperties;
+    public GameOfLifeProcessService(TableViewService tableViewService, GridProperties gridProperties) {
+        super(tableViewService, gridProperties);
     }
 
     public void run() {
@@ -23,7 +17,7 @@ public class GameOfLifeService {
             updateGridData(grid);
             if (count > 5000) {
                 System.out.println("count " + count);
-                appendDataToTableView(grid);
+                setTableViewData(grid);
                 count = 0;
             }
             ++count;
@@ -54,11 +48,6 @@ public class GameOfLifeService {
                 grid[y][x].setState(updatedState);
             }
         }
-    }
-
-    private void appendDataToTableView(Cell[][] grid) {
-        ObservableList<ObservableList<Cell>> data = ValuesHelper.prepareDataList(grid);
-        tableView.setItems(data);
     }
 
     private int calculateNewState(Cell[][] grid, int x, int y, int activeNeighbourCount) {
@@ -117,19 +106,4 @@ public class GameOfLifeService {
         count += grid[y][followingX].getState();
         return count;
     }
-
-    private int getCorrectPreviousX(int previousX, int maxValue) {
-        if (previousX < 0) {
-            previousX = maxValue;
-        }
-        return previousX;
-    }
-
-    private int getCorrectFollowingX(int followingX, int maxValue) {
-        if (followingX > maxValue) {
-            followingX = 0;
-        }
-        return followingX;
-    }
-
 }
