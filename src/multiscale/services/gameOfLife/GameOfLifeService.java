@@ -1,52 +1,29 @@
-package multiscale.services.process;
+package multiscale.services.gameOfLife;
 
+import javafx.scene.layout.GridPane;
 import multiscale.models.Cell;
-import multiscale.models.GridProperties;
-import multiscale.services.tableView.TableViewService;
+import multiscale.models.Grid;
+import multiscale.services.Service;
 
-public class GameOfLifeProcessService extends ProcessService {
+import java.util.concurrent.TimeUnit;
 
-    public GameOfLifeProcessService(TableViewService tableViewService, GridProperties gridProperties) {
-        super(tableViewService, gridProperties);
+public class GameOfLifeService extends Service {
+
+    public GameOfLifeService(Grid grid, GridPane gridPane) {
+        super(grid, gridPane);
     }
 
-    public void run() {
-        Cell[][] grid = gridProperties.getGrid();
-        int count = 0;
-        while (!shouldStopSimulation(grid)) {
-            updateGridData(grid);
-            if (count > 5000) {
-                System.out.println("count " + count);
-                setTableViewData(grid);
-                count = 0;
-            }
-            ++count;
-        }
-    }
-
-    private boolean shouldStopSimulation(Cell[][] grid) {
-        int active = 0;
-        int inactive = 0;
-        for (Cell[] row : grid) {
-            for (Cell cell : row) {
-                if (cell.getState() == 1) {
-                    ++active;
-                } else {
-                    ++inactive;
+    public void run() throws InterruptedException {
+        while(true) {
+            for (int y = 0; y < grid.getHeight(); ++y) {
+                for (int x = 0; x < grid.getWidth(); ++x) {
+                    int activeNeighbourCount = countActiveNeighbour(grid.getGrid(), x, y);
+                    int updatedState = calculateNewState(grid.getGrid(), x, y, activeNeighbourCount);
+                    grid.getGrid()[y][x].setState(updatedState);
                 }
             }
-        }
-        int max = grid.length * grid[0].length;
-        return (active == 0 && inactive == max) || (active == max && inactive == 0);
-    }
-
-    private void updateGridData(Cell[][] grid) {
-        for (int y = 0; y < gridProperties.getGridHeight(); ++y) {
-            for (int x = 0; x < gridProperties.getGridWidth(); ++x) {
-                int activeNeighbourCount = countActiveNeighbour(grid, x, y);
-                int updatedState = calculateNewState(grid, x, y, activeNeighbourCount);
-                grid[y][x].setState(updatedState);
-            }
+            appendToGrid();
+            TimeUnit.SECONDS.sleep(5);
         }
     }
 
@@ -77,7 +54,7 @@ public class GameOfLifeProcessService extends ProcessService {
         int followingX = getCorrectFollowingX((x + 1), grid[0].length - 1);
         int aboveY = (y - 1);
         if (aboveY < 0) {
-            aboveY = grid.length-1;
+            aboveY = grid.length - 1;
         }
         return countStatesForProperValues(grid, aboveY, previousX, x, followingX);
     }

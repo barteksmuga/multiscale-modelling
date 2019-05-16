@@ -1,23 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.RowConstraints?>
-<GridPane prefHeight="700.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="multiscale.controller.MainController">
-   <columnConstraints>
-      <ColumnConstraints />
-   </columnConstraints>
-   <rowConstraints>
-      <RowConstraints />
-   </rowConstraints>
-   <children>
-      <Pane prefHeight="733.0" prefWidth="816.0">
-         <children>
-            <Button fx:id="gameOfLifeButton" layoutX="321.0" layoutY="313.0" mnemonicParsing="false" onAction="#openGameOfLifeWindow" prefHeight="75.0" prefWidth="175.0" text="Gra w życie" />
-            <Button fx:id="elementaryMachineButton" layoutX="321.0" layoutY="223.0" mnemonicParsing="false" onAction="#openElementaryMachineWindow" prefHeight="75.0" prefWidth="175.0" text="Automaty 1D" />
-         </children>
-      </Pane>
-   </children>
-</GridPane>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="multiscale.controllers.MainController">
+    <children>
+        <Button fx:id="gameOfLifeButton" layoutX="321.0" layoutY="313.0" mnemonicParsing="false" onAction="#openGameOfLifeWindow" prefHeight="75.0" prefWidth="175.0" text="Gra w życie" />
+        <Button fx:id="elementaryMachineButton" layoutX="321.0" layoutY="222.0" mnemonicParsing="false" onAction="#openElementaryMachineWindow" prefHeight="75.0" prefWidth="175.0" text="Automaty 1D" />
+        <Button fx:id="grainGrowthButton" layoutX="321.0" layoutY="405.0" mnemonicParsing="false" onAction="#openGrainGrowthWindow" prefHeight="75.0" prefWidth="175.0" text="Rozrost ziaren" />
+    </children>
+</Pane>

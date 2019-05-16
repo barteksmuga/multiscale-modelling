@@ -1,4 +1,4 @@
-package multiscale.enums;
+package multiscale.constants.enums;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +30,7 @@ public enum RuleEnum {
     }
 
     public static List<String> getNames() {
-        List<String> names = new ArrayList<>();
+        var names = new ArrayList<String>();
         for (RuleEnum rule : values()) {
             names.add(rule.getName());
         }

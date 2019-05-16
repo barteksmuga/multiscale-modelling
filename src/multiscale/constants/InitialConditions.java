@@ -1,29 +1,29 @@
-package multiscale.helpers;
+package multiscale.constants;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import multiscale.enums.InitialConditionEnum;
-import multiscale.models.GridProperties;
+import multiscale.constants.enums.InitialConditionEnum;
+import multiscale.models.Grid;
 import multiscale.models.Point;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class InitialConditionDictionary {
+public class InitialConditions {
     private static Random random = new Random();
 
     public static ObservableList<String> getGameOfLifeInitialConditionList() {
         return FXCollections.observableArrayList(InitialConditionEnum.getNames());
     }
 
-    public static List<Point> getCondition(InitialConditionEnum key, GridProperties gridProperties) {
-        return createChosenCondition(key, gridProperties);
+    public static List<Point> getCondition(InitialConditionEnum key, Grid grid) {
+        return createChosenCondition(key, grid);
     }
 
-    private static List<Point> createChosenCondition(InitialConditionEnum key, GridProperties gridProperties) {
-        int x = random.nextInt(gridProperties.getGridWidth());
-        int y = random.nextInt(gridProperties.getGridHeight());
+    private static List<Point> createChosenCondition(InitialConditionEnum key, Grid grid) {
+        int x = random.nextInt(grid.getWidth());
+        int y = random.nextInt(grid.getHeight());
         switch (key) {
             case FIXED:
                 return createFixedCondition(x, y);
@@ -39,7 +39,7 @@ public class InitialConditionDictionary {
     }
 
     private static List<Point> createFixedCondition(int x, int y) {
-        List<Point> list = new ArrayList<>();
+        var list = new ArrayList<Point>();
 //        list.add(new Point(x, y));
 //        list.add(new Point(x + 1, y + 1));
 //        list.add(new Point(x + 2, y + 1));
@@ -58,7 +58,7 @@ public class InitialConditionDictionary {
     }
 
     private static List<Point> createGliderCondition(int x, int y) {
-        List<Point> list = new ArrayList<>();
+        var list = new ArrayList<Point>();
         list.add(new Point(3, 6));
         list.add(new Point(3 + 1, 6));
         list.add(new Point(3 + 1, 6 + 1));
@@ -67,16 +67,15 @@ public class InitialConditionDictionary {
     }
 
     private static List<Point> createRandomCondition(int x, int y) {
-        List<Point> list = new ArrayList<>();
+        var list = new ArrayList<Point>();
         return list;
     }
 
     private static List<Point> createOscillatorCondition(int x, int y) {
-        List<Point> list = new ArrayList<>();
+        var list = new ArrayList<Point>();
         list.add(new Point(x, y - 1));
         list.add(new Point(x, y));
         list.add(new Point(x, y + 1));
         return list;
     }
-
 }

@@ -1,16 +1,15 @@
-package multiscale.helpers;
+package multiscale.constants;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import multiscale.enums.RuleEnum;
+import multiscale.constants.enums.RuleEnum;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class RuleDictionary {
-
+public class Rules {
     private final static Map<Integer, List<Integer>> map = initializeMap();
 
     public static ObservableList<String> getElementaryMachineRuleList() {
@@ -22,7 +21,7 @@ public class RuleDictionary {
     }
 
     private static Map<Integer, List<Integer>> initializeMap() {
-        Map<Integer, List<Integer>> map = new HashMap<>();
+        var map = new HashMap<Integer, List<Integer>>();
         map.put(30, createRule30());
         map.put(60, createRule60());
         map.put(90, createRule90());
@@ -32,7 +31,7 @@ public class RuleDictionary {
     }
 
     private static List<Integer> createRule30() {
-        List<Integer> list = new ArrayList<>();
+        var list = new ArrayList<Integer>();
         list.add(0);
         list.add(1);
         list.add(1);
@@ -45,7 +44,7 @@ public class RuleDictionary {
     }
 
     private static List<Integer> createRule60() {
-        List<Integer> list = new ArrayList<>();
+        var list = new ArrayList<Integer>();
         list.add(0);
         list.add(0);
         list.add(1);
@@ -57,7 +56,7 @@ public class RuleDictionary {
         return list;
     }
     private static List<Integer> createRule90() {
-        List<Integer> list = new ArrayList<>();
+        var list = new ArrayList<Integer>();
         list.add(0);
         list.add(1);
         list.add(0);
@@ -69,7 +68,7 @@ public class RuleDictionary {
         return list;
     }
     private static List<Integer> createRule120() {
-        List<Integer> list = new ArrayList<>();
+        var list = new ArrayList<Integer>();
         list.add(0);
         list.add(0);
         list.add(0);
@@ -81,7 +80,7 @@ public class RuleDictionary {
         return list;
     }
     private static List<Integer> createRule225() {
-        List<Integer> list = new ArrayList<>();
+        var list = new ArrayList<Integer>();
         list.add(1);
         list.add(0);
         list.add(0);
