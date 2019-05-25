@@ -17,7 +17,6 @@ public abstract class Service {
     public abstract void run() throws InterruptedException;
 
     protected void appendToGrid() {
-        gridPaneService.wipeGridPaneData(gridPane);
         gridPaneService.drawArrayOnGridPane(gridPane, grid);
     }
 

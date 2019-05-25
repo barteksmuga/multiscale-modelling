@@ -34,10 +34,6 @@ public class GameOfLifeController {
         gridPaneService = new GridPaneService();
     }
 
-    public void handleMouseClicked(MouseEvent mouseEvent) {
-        //if chosen condition is custom input...
-    }
-
     public void drawGrid(ActionEvent actionEvent) {
         int gridWidth = Integer.valueOf(gridWidthField.getText());
         int gridHeight = Integer.valueOf(gridHeightField.getText());
@@ -63,7 +59,7 @@ public class GameOfLifeController {
         var initialCondition = initialConditionChoiceBox.getSelectionModel().getSelectedItem();
         if (initialCondition != null) {
             var condition = InitialConditions.getCondition(InitialConditionEnum.get(initialCondition), grid);
-            for (var point : condition) {
+            for (var point: condition) {
                 grid.getGrid()[point.y][point.x].setState(StateEnum.ACTIVE.getStateValue());
             }
         }

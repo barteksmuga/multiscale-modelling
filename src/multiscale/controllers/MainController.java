@@ -15,6 +15,10 @@ import static multiscale.constants.WindowConstants.CHILD_HEIGHT;
 import static multiscale.constants.WindowConstants.CHILD_WIDTH;
 import static multiscale.constants.WindowConstants.ELEMENTARY_MACHINE_WINDOW_PATH;
 import static multiscale.constants.WindowConstants.ELEMENTARY_MACHINE_WINDOW_TITLE;
+import static multiscale.constants.WindowConstants.GAME_OF_LIFE_WINDOW_PATH;
+import static multiscale.constants.WindowConstants.GAME_OF_LIFE_WINDOW_TITLE;
+import static multiscale.constants.WindowConstants.GRAIN_GROWTH_WINDOW_PATH;
+import static multiscale.constants.WindowConstants.GRAIN_GROWTH_WINDOW_TITLE;
 
 public class MainController {
     private final Logger logger = Logger.getLogger(getClass().getName());
@@ -29,11 +33,11 @@ public class MainController {
     }
 
     public void openGameOfLifeWindow() {
-
+        createStage(GAME_OF_LIFE_WINDOW_TITLE, GAME_OF_LIFE_WINDOW_PATH).show();
     }
 
     public void openGrainGrowthWindow() {
-
+        createStage(GRAIN_GROWTH_WINDOW_TITLE, GRAIN_GROWTH_WINDOW_PATH).show();
     }
 
     private Stage createStage(String title, String pathToView) {

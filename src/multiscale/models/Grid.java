@@ -63,26 +63,29 @@ public class Grid {
         grid = new Cell[height][width];
         for (int i=0; i<height; ++i) {
             for (int j=0; j<width; ++j) {
-                grid[i][j] = buildCell(StateEnum.INACTIVE.getStateValue());
+                Point point = new Point(j, i);
+                grid[i][j] = buildCell(point, StateEnum.INACTIVE.getStateValue());
             }
         }
     }
 
-    private Cell buildCell(int state) {
-        return new Cell.Builder()
+    private Cell buildCell(Point point, int state) {
+        return new Cell
+                .Builder()
                 .withState(state)
                 .withRectangle(buildRectangle())
+                .withCoordinates(point)
                 .build();
     }
 
     private Rectangle buildRectangle() {
-        double cellSize = calculateCellSize(width, DRAW_GRID_AREA_WIDTH);
-        return new Rectangle(cellSize, cellSize);
+        double cellWidth = calculateCellSize(width, DRAW_GRID_AREA_WIDTH);
+        double cellHeight = calculateCellSize(height, DRAW_GRID_AREA_HEIGHT);
+        return new Rectangle(cellWidth, cellHeight);
     }
 
     private double calculateCellSize(int gridDimSize, double areaDimSize) {
-        double result = areaDimSize / gridDimSize;
-        return tooSmall(result) ? MIN_CELL_SIZE : (tooBig(result) ? MAX_CELL_SIZE : result);
+        return areaDimSize / gridDimSize;
     }
 
     private boolean tooSmall(double result) {

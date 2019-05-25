@@ -14,17 +14,20 @@ public class GameOfLifeService extends Service {
     }
 
     public void run() throws InterruptedException {
-        while(true) {
-            for (int y = 0; y < grid.getHeight(); ++y) {
-                for (int x = 0; x < grid.getWidth(); ++x) {
-                    int activeNeighbourCount = countActiveNeighbour(grid.getGrid(), x, y);
-                    int updatedState = calculateNewState(grid.getGrid(), x, y, activeNeighbourCount);
+        int gridHeight = grid.getHeight();
+        int gridWidth = grid.getWidth();
+//        while(true) {
+            Cell[][] baseGrid = grid.getGrid();
+            for (int y = 0; y < gridHeight; ++y) {
+                for (int x = 0; x < gridWidth; ++x) {
+                    int activeNeighbourCount = countActiveNeighbour(baseGrid, x, y);
+                    int updatedState = calculateNewState(baseGrid, x, y, activeNeighbourCount);
                     grid.getGrid()[y][x].setState(updatedState);
                 }
             }
             appendToGrid();
-            TimeUnit.SECONDS.sleep(5);
-        }
+//            TimeUnit.SECONDS.sleep(15);
+//        }
     }
 
     private int calculateNewState(Cell[][] grid, int x, int y, int activeNeighbourCount) {

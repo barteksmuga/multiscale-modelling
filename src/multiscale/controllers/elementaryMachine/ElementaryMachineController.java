@@ -43,6 +43,7 @@ public class ElementaryMachineController {
         grid = new Grid(gridWidth, gridHeight);
         var firstRowList = getFirstRow();
         drawGridArea.addRow(0, firstRowList.toArray(new Cell[0]));
+        drawGridArea.getChildren().setAll(firstRowList);
         grid.setFirstRow(firstRowList);
     }
 
@@ -65,21 +66,6 @@ public class ElementaryMachineController {
     }
 
     private List<Cell> getFirstRow() {
-        var list = Arrays.asList(grid.getGrid()[0]);
-        list.get(4).setState(StateEnum.ACTIVE.getStateValue());
-        list.get(14).setState(StateEnum.ACTIVE.getStateValue());
-        list.get(24).setState(StateEnum.ACTIVE.getStateValue());
-        list.get(34).setState(StateEnum.ACTIVE.getStateValue());
-        return list;
-    }
-
-    public void handleMouseClicked(MouseEvent mouseEvent) {
-        Node clicked = (Node) mouseEvent.getSource();
-
-        if (clicked != drawGridArea) {
-            Integer row = GridPane.getRowIndex(clicked);
-            Integer column = GridPane.getColumnIndex(clicked);
-            System.out.println("Row: " + row + " Column: " + column);
-        }
+        return Arrays.asList(grid.getGrid()[0]);
     }
 }
