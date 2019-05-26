@@ -1,7 +1,8 @@
-package multiscale.constants.enums;
+package multiscale.enums;
 
 public enum StateEnum {
 
+    NOT_SET(-1),
     ACTIVE(1),
     INACTIVE(0);
 

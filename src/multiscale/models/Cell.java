@@ -1,15 +1,18 @@
 package multiscale.models;
 
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
-import multiscale.constants.enums.StateEnum;
+import multiscale.enums.ModeEnum;
+import multiscale.enums.StateEnum;
 import multiscale.services.PaintHelper;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static multiscale.constants.WindowConstants.DEFAULT_CELL_SIZE;
+import static multiscale.enums.StateEnum.ACTIVE;
+import static multiscale.enums.StateEnum.INACTIVE;
 
 public class Cell extends StackPane {
     private static final AtomicInteger idGenerator = new AtomicInteger(1);
@@ -18,13 +21,14 @@ public class Cell extends StackPane {
     private Point point;
 
     private Rectangle rectangle;
-    private Color color;
+    private ModeEnum mode;
 
-    public Cell() {
+    public Cell(Cell cell) {
+        this.state = cell.getState();
         this.cId = idGenerator.getAndIncrement();
-        this.state = StateEnum.INACTIVE.getStateValue();
-        this.rectangle = new Rectangle(DEFAULT_CELL_SIZE, DEFAULT_CELL_SIZE, Builder.getPaint(state));
-        initializeRectangle();
+        this.point = cell.getPoint();
+        this.rectangle = cell.getRectangle();
+        this.mode = cell.getMode();
     }
 
     private Cell(Builder builder) {
@@ -32,9 +36,15 @@ public class Cell extends StackPane {
         this.state = builder.state;
         this.rectangle = builder.rectangle;
         this.point = builder.point;
-
+        this.mode = builder.mode;
         initializeRectangle();
-        setOnMouseClicked(event -> revertState());
+        setOnMouseClicked(event -> {
+            if (event.getButton().equals(MouseButton.PRIMARY)) {
+                leftButtonClicked();
+            } else if (event.getButton().equals(MouseButton.SECONDARY)){
+                rightButtonClicked();
+            }
+        });
     }
 
     public int getcId() {
@@ -45,8 +55,13 @@ public class Cell extends StackPane {
         return state;
     }
 
+    private void incrementState() {
+        ++this.state;
+        updateRectangle();
+    }
+
     private void revertState() {
-        this.state = this.state == 0 ? 1 : 0;
+        this.state = this.state == INACTIVE.getStateValue() ? ACTIVE.getStateValue() : INACTIVE.getStateValue();
         updateRectangle();
     }
 
@@ -59,6 +74,14 @@ public class Cell extends StackPane {
         return rectangle;
     }
 
+    public Point getPoint() {
+        return point;
+    }
+
+    public ModeEnum getMode() {
+        return mode;
+    }
+
     private void updateRectangle() {
         rectangle.setFill(Builder.getPaint(state));
     }
@@ -68,10 +91,23 @@ public class Cell extends StackPane {
         getChildren().addAll(rectangle);
     }
 
+    private void rightButtonClicked() {
+        setState(StateEnum.NOT_SET.getStateValue());
+    }
+
+    private void leftButtonClicked() {
+        if (mode != ModeEnum.GRAIN_GROWTH) {
+            revertState();
+        } else {
+            incrementState();
+        }
+    }
+
     public static class Builder {
         private int state;
         private Rectangle rectangle;
         private Point point;
+        private ModeEnum mode;
 
         public Builder() {}
 
@@ -91,6 +127,11 @@ public class Cell extends StackPane {
             return this;
         }
 
+        public Builder withMode(ModeEnum mode) {
+            this.mode = mode;
+            return this;
+        }
+
         public Cell build() {
             return new Cell(this);
         }
@@ -99,6 +140,6 @@ public class Cell extends StackPane {
             Color color = PaintHelper.getColorForState(state);
             return color.deriveColor(1,1,1,1);
         }
-
     }
+
 }

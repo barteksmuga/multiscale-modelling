@@ -1,4 +1,4 @@
-package multiscale.constants.enums;
+package multiscale.enums.gameOfLife;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +21,7 @@ public enum InitialConditionEnum {
     }
 
     public static InitialConditionEnum get(String value) {
-        for(var tmp : values()) {
+        for (var tmp: values()) {
             if (tmp.getName().equals(value)) {
                 return tmp;
             }
@@ -31,7 +31,7 @@ public enum InitialConditionEnum {
 
     public static List<String> getNames() {
         var names = new ArrayList<String>();
-        for (var rule : values()) {
+        for (var rule: values()) {
             names.add(rule.getName());
         }
         return names;

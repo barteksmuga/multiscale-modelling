@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.Pane?>
+
+<Pane prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="multiscale.controllers.grainGrowth.GrainGrowthController">
+    <children>
+        <ScrollPane layoutX="157.0" layoutY="18.0" prefHeight="770.0" prefWidth="1031.0">
+            <content>
+                <GridPane fx:id="drawGridArea" prefHeight="771.0" prefWidth="1031.0" />
+            </content>
+        </ScrollPane>
+        <Button fx:id="drawFirstRowButton" layoutX="13.0" layoutY="280.0" mnemonicParsing="false" onAction="#drawGrid" prefHeight="27.0" prefWidth="135.0" text="Rysuj" />
+        <Button fx:id="startSimulationButton" layoutX="16.0" layoutY="455.0" mnemonicParsing="false" onAction="#start" prefHeight="27.0" prefWidth="135.0" text="Start" />
+        <Button fx:id="wipeResultsButton" layoutX="16.0" layoutY="491.0" mnemonicParsing="false" onAction="#wipeData" prefHeight="27.0" prefWidth="135.0" text="Wyczyść" />
+        <Label layoutX="18.0" layoutY="10.0" text="Wysokość" />
+        <Label layoutX="17.0" layoutY="60.0" text="Szerokość" />
+        <TextField fx:id="heightField" layoutX="13.0" layoutY="27.0" prefHeight="27.0" prefWidth="135.0" />
+        <TextField fx:id="widthField" layoutX="13.0" layoutY="86.0" prefHeight="27.0" prefWidth="135.0" />
+        <ChoiceBox fx:id="insertModeChoiceBox" layoutX="13.0" layoutY="120.0" prefHeight="27.0" prefWidth="135.0" />
+        <Label layoutX="20.0" layoutY="330.0" text="Warunki brzegowe" />
+      <TextField fx:id="grainNumberField" layoutX="16.0" layoutY="192.0" prefHeight="27.0" prefWidth="135.0" />
+      <Label layoutX="20.0" layoutY="175.0" text="Liczba ziaren" />
+      <TextField fx:id="radiusField" layoutX="16.0" layoutY="243.0" prefHeight="27.0" prefWidth="135.0" />
+      <Label layoutX="20.0" layoutY="226.0" text="Promień" />
+      <ChoiceBox fx:id="boundaryConditionChoiceBox" layoutX="14.0" layoutY="347.0" prefHeight="27.0" prefWidth="135.0" />
+      <Label layoutX="25.0" layoutY="395.0" text="Sąsiedztwo" />
+      <ChoiceBox fx:id="neighbourhoodChoiceBox" layoutX="16.0" layoutY="412.0" prefHeight="27.0" prefWidth="135.0" />
+    </children>
+</Pane>

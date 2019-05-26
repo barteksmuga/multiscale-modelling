@@ -19,7 +19,7 @@ public class WindowConstants {
     public static final double DRAW_GRID_AREA_WIDTH = 1000.0;
     public static final double DRAW_GRID_AREA_HEIGHT = 780.0;
 
-    public static final double DEFAULT_CELL_SIZE = 20.0;
-    public static final double MIN_CELL_SIZE = 10.0;
-    public static final double MAX_CELL_SIZE = 30.0;
+    public static final double DEFAULT_CELL_SIZE = 10.0;
+    public static final double MIN_CELL_SIZE = 5.0;
+    public static final double MAX_CELL_SIZE = 15.0;
 }

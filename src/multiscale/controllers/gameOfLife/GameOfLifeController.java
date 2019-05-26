@@ -5,12 +5,11 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
-import multiscale.constants.InitialConditions;
-import multiscale.constants.enums.InitialConditionEnum;
-import multiscale.constants.enums.StateEnum;
-import multiscale.models.Cell;
+import multiscale.constants.gameOfLife.InitialConditions;
+import multiscale.enums.ModeEnum;
+import multiscale.enums.gameOfLife.InitialConditionEnum;
+import multiscale.enums.StateEnum;
 import multiscale.models.Grid;
 import multiscale.services.GridPaneService;
 import multiscale.services.gameOfLife.GameOfLifeService;
@@ -37,7 +36,7 @@ public class GameOfLifeController {
     public void drawGrid(ActionEvent actionEvent) {
         int gridWidth = Integer.valueOf(gridWidthField.getText());
         int gridHeight = Integer.valueOf(gridHeightField.getText());
-        grid = new Grid(gridWidth, gridHeight);
+        grid = new Grid(gridWidth, gridHeight, ModeEnum.GAME_OF_LIFE);
         applyChosenCondition();
         draw();
     }

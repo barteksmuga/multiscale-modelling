@@ -1,7 +1,7 @@
 package multiscale.services.elementaryMachine;
 
 import javafx.scene.layout.GridPane;
-import multiscale.constants.Rules;
+import multiscale.constants.elementaryMachine.Rules;
 import multiscale.models.Cell;
 import multiscale.models.Grid;
 import multiscale.services.Service;

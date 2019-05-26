@@ -1,0 +1,88 @@
+package multiscale.controllers.grainGrowth;
+
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.GridPane;
+import multiscale.constants.grainGrowth.ChoiceBoxOptions;
+import multiscale.enums.ModeEnum;
+import multiscale.enums.StateEnum;
+import multiscale.enums.grainGrowth.BoundaryConditionEnum;
+import multiscale.enums.grainGrowth.InsertModeEnum;
+import multiscale.enums.grainGrowth.NeighbourhoodEnum;
+import multiscale.models.Grid;
+import multiscale.services.GridPaneService;
+import multiscale.services.grainGrowth.GrainGrowthService;
+
+public class GrainGrowthController {
+
+    @FXML TextField grainNumberField;
+    @FXML TextField radiusField;
+    @FXML ChoiceBox<String> boundaryConditionChoiceBox;
+    @FXML ChoiceBox<String> neighbourhoodChoiceBox;
+    @FXML GridPane drawGridArea;
+    @FXML Button drawFirstRowButton;
+    @FXML Button startSimulationButton;
+    @FXML Button wipeResultsButton;
+    @FXML TextField heightField;
+    @FXML TextField widthField;
+    @FXML ChoiceBox<String> insertModeChoiceBox;
+
+    private Grid grid;
+    private GridPaneService gridPaneService;
+
+    @FXML
+    public void initialize() {
+        gridPaneService = new GridPaneService();
+        radiusField.setDisable(true);
+        insertModeChoiceBox.setItems(ChoiceBoxOptions.insertModeList());
+        boundaryConditionChoiceBox.setItems(ChoiceBoxOptions.boundaryConditionList());
+        neighbourhoodChoiceBox.setItems(ChoiceBoxOptions.neighbourhoodList());
+        initializeInsertModeChoiceBoxListener();
+
+        //todo remove hardcoded options!!
+        boundaryConditionChoiceBox.setValue(BoundaryConditionEnum.PERIODICAL.getName());
+        neighbourhoodChoiceBox.setValue(NeighbourhoodEnum.VON_NEUMANN.getName());
+        insertModeChoiceBox.setValue(InsertModeEnum.CUSTOM.getName());
+        widthField.setText("10");
+        heightField.setText("10");
+    }
+
+    public void start(ActionEvent actionEvent) {
+        var service = new GrainGrowthService(grid, drawGridArea);
+        service.run();
+    }
+
+
+    public void wipeData(ActionEvent actionEvent) {
+        gridPaneService.wipeGridPaneData(drawGridArea);
+    }
+
+    public void drawGrid(ActionEvent actionEvent) {
+        int gridWidth = Integer.valueOf(widthField.getText());
+        int gridHeight = Integer.valueOf(heightField.getText());
+
+        grid = new Grid(gridWidth, gridHeight, ModeEnum.GRAIN_GROWTH);
+        gridPaneService.drawArrayOnGridPane(drawGridArea, grid);
+    }
+
+    private void initializeInsertModeChoiceBoxListener() {
+            insertModeChoiceBox.getSelectionModel()
+                    .selectedIndexProperty()
+                    .addListener((observable, oldValue, newValue) -> {
+                        String chosen = insertModeChoiceBox.getItems().get(newValue.intValue());
+                        if (chosen.equals(InsertModeEnum.RANDOM_WITH_RADIUS.getName())) {
+                            radiusField.setDisable(false);
+                            grainNumberField.setDisable(false);
+                        } else if (chosen.equals(InsertModeEnum.CUSTOM.getName())) {
+                            grainNumberField.setDisable(true);
+                            radiusField.setDisable(true);
+                        } else {
+                            grainNumberField.setDisable(false);
+                            radiusField.setDisable(true);
+                        }
+            });
+    }
+}

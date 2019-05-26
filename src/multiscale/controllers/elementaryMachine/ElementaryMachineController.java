@@ -2,14 +2,13 @@ package multiscale.controllers.elementaryMachine;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
-import multiscale.constants.Rules;
-import multiscale.constants.enums.StateEnum;
+import multiscale.constants.elementaryMachine.Rules;
+import multiscale.enums.ModeEnum;
+import multiscale.enums.StateEnum;
 import multiscale.models.Cell;
 import multiscale.models.Grid;
 import multiscale.services.elementaryMachine.ElementaryMachineService;
@@ -40,7 +39,7 @@ public class ElementaryMachineController {
     public void drawFirstRow(ActionEvent actionEvent) {
         int gridWidth = Integer.valueOf(widthField.getText());
         int gridHeight = Integer.valueOf(stepCountField.getText());
-        grid = new Grid(gridWidth, gridHeight);
+        grid = new Grid(gridWidth, gridHeight, ModeEnum.ELEMENTARY_MACHINE);
         var firstRowList = getFirstRow();
         drawGridArea.addRow(0, firstRowList.toArray(new Cell[0]));
         drawGridArea.getChildren().setAll(firstRowList);

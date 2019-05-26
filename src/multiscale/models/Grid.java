@@ -1,9 +1,9 @@
 package multiscale.models;
 
 import javafx.scene.shape.Rectangle;
-import multiscale.constants.enums.StateEnum;
+import multiscale.enums.ModeEnum;
+import multiscale.enums.StateEnum;
 
-import java.util.Arrays;
 import java.util.List;
 
 import static multiscale.constants.WindowConstants.DRAW_GRID_AREA_HEIGHT;
@@ -16,10 +16,12 @@ public class Grid {
     private int height;
     private Cell[][] grid;
     private int ruleIndicator;
+    private ModeEnum mode;
 
-    public Grid(int width, int height) {
+    public Grid(int width, int height, ModeEnum mode) {
         this.width = width;
         this.height = height;
+        this.mode = mode;
         initializeGrid();
     }
 
@@ -61,10 +63,11 @@ public class Grid {
 
     private void initializeGrid() {
         grid = new Cell[height][width];
+        StateEnum initialState = getInitialState();
         for (int i=0; i<height; ++i) {
             for (int j=0; j<width; ++j) {
                 Point point = new Point(j, i);
-                grid[i][j] = buildCell(point, StateEnum.INACTIVE.getStateValue());
+                grid[i][j] = buildCell(point, initialState.getStateValue());
             }
         }
     }
@@ -75,17 +78,22 @@ public class Grid {
                 .withState(state)
                 .withRectangle(buildRectangle())
                 .withCoordinates(point)
+                .withMode(mode)
                 .build();
     }
 
+    private StateEnum getInitialState() {
+        return mode == ModeEnum.GRAIN_GROWTH ? StateEnum.NOT_SET : StateEnum.INACTIVE;
+    }
+
     private Rectangle buildRectangle() {
-        double cellWidth = calculateCellSize(width, DRAW_GRID_AREA_WIDTH);
-        double cellHeight = calculateCellSize(height, DRAW_GRID_AREA_HEIGHT);
-        return new Rectangle(cellWidth, cellHeight);
+        double cellSize = calculateCellSize(width, DRAW_GRID_AREA_WIDTH);
+        return new Rectangle(cellSize, cellSize);
     }
 
     private double calculateCellSize(int gridDimSize, double areaDimSize) {
-        return areaDimSize / gridDimSize;
+        double result = areaDimSize / gridDimSize;
+        return tooSmall(result) ? MIN_CELL_SIZE : (tooBig(result) ? MAX_CELL_SIZE : result);
     }
 
     private boolean tooSmall(double result) {

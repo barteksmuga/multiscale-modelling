@@ -1,18 +1,15 @@
-package multiscale.constants.enums;
+package multiscale.enums.grainGrowth;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public enum RuleEnum {
-    RULE_30("30"),
-    RULE_60("60"),
-    RULE_90("90"),
-    RULE_120("120"),
-    RULE_225("225");
+public enum BoundaryConditionEnum {
+    PERIODICAL("Periodyczne"),
+    ABSORBING("Absorbujące");
 
     private String name;
 
-    RuleEnum(String name) {
+    BoundaryConditionEnum(String name) {
         this.name = name;
     }
 
@@ -20,8 +17,8 @@ public enum RuleEnum {
         return name;
     }
 
-    public static RuleEnum get(String value) {
-        for(RuleEnum tmp : values()) {
+    public static BoundaryConditionEnum get(String value) {
+        for(var tmp : values()) {
             if (tmp.getName().equals(value)) {
                 return tmp;
             }
@@ -31,8 +28,8 @@ public enum RuleEnum {
 
     public static List<String> getNames() {
         var names = new ArrayList<String>();
-        for (RuleEnum rule : values()) {
-            names.add(rule.getName());
+        for (var condition : values()) {
+            names.add(condition.getName());
         }
         return names;
     }

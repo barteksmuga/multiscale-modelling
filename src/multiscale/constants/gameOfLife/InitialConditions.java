@@ -1,8 +1,8 @@
-package multiscale.constants;
+package multiscale.constants.gameOfLife;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import multiscale.constants.enums.InitialConditionEnum;
+import multiscale.enums.gameOfLife.InitialConditionEnum;
 import multiscale.models.Grid;
 import multiscale.models.Point;
 

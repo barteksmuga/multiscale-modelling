@@ -1,8 +1,8 @@
-package multiscale.constants;
+package multiscale.constants.elementaryMachine;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import multiscale.constants.enums.RuleEnum;
+import multiscale.enums.elementaryMachine.RuleEnum;
 
 import java.util.ArrayList;
 import java.util.HashMap;

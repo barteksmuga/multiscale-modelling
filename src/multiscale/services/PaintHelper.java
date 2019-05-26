@@ -20,7 +20,7 @@ public class PaintHelper {
     private static Map<Integer, Color> initMapWithBasicColors() {
         var map = new HashMap<Integer, Color>();
         for (int i = 0; i < basicColors.size(); ++i) {
-            map.put(i, basicColors.get(i));
+            map.put((i-1), basicColors.get(i));
         }
         return map;
     }
@@ -29,10 +29,7 @@ public class PaintHelper {
         return colorMap.containsKey(state) ? colorMap.get(state) : addColorForState(state);
     }
 
-    public static Color addColorForState(int state) {
-        if (colorMap.containsKey(state)) {
-            return colorMap.get(state);
-        }
+    private static Color addColorForState(int state) {
         Color newColor = getNewColor();
         colorMap.put(state, newColor);
         return newColor;
@@ -55,6 +52,7 @@ public class PaintHelper {
 
     private static List<Color> initBasicColors() {
         var list = new ArrayList<Color>();
+        list.add(Color.WHITE);
         list.add(Color.GREEN);
         list.add(Color.RED);
         return list;
