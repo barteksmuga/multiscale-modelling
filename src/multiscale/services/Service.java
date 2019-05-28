@@ -1,20 +1,36 @@
 package multiscale.services;
 
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.scene.layout.GridPane;
+import javafx.util.Duration;
 import multiscale.models.Grid;
+
+import static multiscale.constants.WindowConstants.INTERVAL;
 
 public abstract class Service {
     protected Grid grid;
     protected GridPane gridPane;
     protected GridPaneService gridPaneService;
+    protected Timeline timeline;
 
     public Service(Grid grid, GridPane gridPane) {
         this.grid = grid;
         this.gridPane = gridPane;
         this.gridPaneService = new GridPaneService();
+
+        timeline = new Timeline(new KeyFrame(Duration.millis(INTERVAL), event -> {
+            nextStep();
+        }));
+        timeline.setCycleCount(Animation.INDEFINITE);
     }
 
-    public abstract void run() throws InterruptedException;
+    public void run() {
+        timeline.play();
+    }
+
+    protected abstract void nextStep();
 
     protected void appendToGrid() {
         gridPaneService.drawArrayOnGridPane(gridPane, grid);

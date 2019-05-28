@@ -5,6 +5,7 @@ import multiscale.enums.ModeEnum;
 import multiscale.enums.StateEnum;
 
 import java.util.List;
+import java.util.Random;
 
 import static multiscale.constants.WindowConstants.DRAW_GRID_AREA_HEIGHT;
 import static multiscale.constants.WindowConstants.DRAW_GRID_AREA_WIDTH;
@@ -31,6 +32,15 @@ public class Grid {
 
     public void setRuleIndicator(int ruleIndicator) {
         this.ruleIndicator = ruleIndicator;
+    }
+
+    public void setRandomCellActive() {
+        var random = new Random();
+        for (int i=0; i<750; ++i) {
+            int hIndex = random.nextInt(height);
+            int wIndex = random.nextInt(width);
+            grid[hIndex][wIndex].setState(StateEnum.ACTIVE.getStateValue());
+        }
     }
 
     public void setFirstRow(List<Cell> firstRow) {
@@ -82,7 +92,7 @@ public class Grid {
                 .build();
     }
 
-    private StateEnum getInitialState() {
+    public StateEnum getInitialState() {
         return mode == ModeEnum.GRAIN_GROWTH ? StateEnum.NOT_SET : StateEnum.INACTIVE;
     }
 

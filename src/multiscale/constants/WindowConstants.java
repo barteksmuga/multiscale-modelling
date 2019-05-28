@@ -22,4 +22,6 @@ public class WindowConstants {
     public static final double DEFAULT_CELL_SIZE = 10.0;
     public static final double MIN_CELL_SIZE = 5.0;
     public static final double MAX_CELL_SIZE = 15.0;
+
+    public static final int INTERVAL = 200;
 }

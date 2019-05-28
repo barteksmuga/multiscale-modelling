@@ -41,7 +41,7 @@ public class GameOfLifeController {
         draw();
     }
 
-    public void start(ActionEvent actionEvent) throws InterruptedException {
+    public void start(ActionEvent actionEvent) {
         GameOfLifeService service = new GameOfLifeService(grid, drawGridArea);
         service.run();
     }
@@ -62,5 +62,6 @@ public class GameOfLifeController {
                 grid.getGrid()[point.y][point.x].setState(StateEnum.ACTIVE.getStateValue());
             }
         }
+//        grid.setRandomCellActive();
     }
 }

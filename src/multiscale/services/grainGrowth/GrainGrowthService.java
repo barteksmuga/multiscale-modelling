@@ -1,10 +1,6 @@
 package multiscale.services.grainGrowth;
 
-import javafx.animation.Animation;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.scene.layout.GridPane;
-import javafx.util.Duration;
 import multiscale.models.Cell;
 import multiscale.models.Grid;
 import multiscale.services.Service;
@@ -13,22 +9,12 @@ import multiscale.services.grainGrowth.neighbourhoodStrategies.vonNeumann.VonNeu
 
 public class GrainGrowthService extends Service {
 
-    private Timeline timeline;
-
     public GrainGrowthService(Grid grid, GridPane gridPane) {
         super(grid, gridPane);
-        timeline = new Timeline(new KeyFrame(Duration.millis(200), event -> {
-            nextStep();
-        }));
-        timeline.setCycleCount(Animation.INDEFINITE);
     }
 
     @Override
-    public void run() {
-        timeline.play();
-    }
-
-    private void nextStep() {
+    protected void nextStep() {
         System.out.println("nextStep");
         NeighbourhoodStrategy neighbourhoodStrategy = new VonNeumannNeighbourhoodStrategy(grid);
         Cell[][] localGrid = copyGrid();

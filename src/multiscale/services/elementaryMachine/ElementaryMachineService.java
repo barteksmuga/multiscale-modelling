@@ -14,7 +14,13 @@ public class ElementaryMachineService extends Service {
         super(grid, gridPane);
     }
 
+    @Override
     public void run() {
+        nextStep();
+    }
+
+    @Override
+    protected void nextStep() {
         var ruleMask = getRuleMask(grid.getRuleIndicator());
         for (int step = 0; step < (grid.getHeight() - 1); ++step) {
             for (int cell = 0; cell < grid.getWidth(); ++cell) {

@@ -1,11 +1,10 @@
 package multiscale.services.gameOfLife;
 
 import javafx.scene.layout.GridPane;
+import multiscale.enums.StateEnum;
 import multiscale.models.Cell;
 import multiscale.models.Grid;
 import multiscale.services.Service;
-
-import java.util.concurrent.TimeUnit;
 
 public class GameOfLifeService extends Service {
 
@@ -13,21 +12,36 @@ public class GameOfLifeService extends Service {
         super(grid, gridPane);
     }
 
-    public void run() throws InterruptedException {
+    @Override
+    protected void nextStep() {
+        System.out.println("nextStep()");
         int gridHeight = grid.getHeight();
         int gridWidth = grid.getWidth();
-//        while(true) {
-            Cell[][] baseGrid = grid.getGrid();
-            for (int y = 0; y < gridHeight; ++y) {
-                for (int x = 0; x < gridWidth; ++x) {
-                    int activeNeighbourCount = countActiveNeighbour(baseGrid, x, y);
-                    int updatedState = calculateNewState(baseGrid, x, y, activeNeighbourCount);
-                    grid.getGrid()[y][x].setState(updatedState);
+        Cell[][] baseGrid = grid.getGrid();
+        for (int y = 0; y < gridHeight; ++y) {
+            for (int x = 0; x < gridWidth; ++x) {
+                int activeNeighbourCount = countActiveNeighbour(baseGrid, x, y);
+                int updatedState = calculateNewState(baseGrid, x, y, activeNeighbourCount);
+                grid.getGrid()[y][x].setState(updatedState);
+            }
+        }
+        appendToGrid();
+        if (!continueProcessing()) {
+            timeline.stop();
+            System.out.println("timeline.stop()");
+        }
+    }
+
+    private boolean continueProcessing() {
+        boolean cont = false;
+        for (Cell[] row : grid.getGrid()) {
+            for (Cell cell : row) {
+                if (cell.getState() == StateEnum.ACTIVE.getStateValue()) {
+                    cont = true;
                 }
             }
-            appendToGrid();
-//            TimeUnit.SECONDS.sleep(15);
-//        }
+        }
+        return cont;
     }
 
     private int calculateNewState(Cell[][] grid, int x, int y, int activeNeighbourCount) {
