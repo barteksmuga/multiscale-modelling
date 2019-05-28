@@ -3,6 +3,7 @@ package multiscale.models;
 import javafx.scene.shape.Rectangle;
 import multiscale.enums.ModeEnum;
 import multiscale.enums.StateEnum;
+import multiscale.services.grainGrowth.neighbourhoodStrategies.NeighbourhoodStrategy;
 
 import java.util.List;
 import java.util.Random;
@@ -18,6 +19,7 @@ public class Grid {
     private Cell[][] grid;
     private int ruleIndicator;
     private ModeEnum mode;
+    private NeighbourhoodStrategy neighbourhoodStrategy;
 
     public Grid(int width, int height, ModeEnum mode) {
         this.width = width;
@@ -69,6 +71,14 @@ public class Grid {
 
     public void setGrid(Cell[][] grid) {
         this.grid = grid;
+    }
+
+    public NeighbourhoodStrategy getNeighbourhoodStrategy() {
+        return neighbourhoodStrategy;
+    }
+
+    public void setNeighbourhoodStrategy(NeighbourhoodStrategy neighbourhoodStrategy) {
+        this.neighbourhoodStrategy = neighbourhoodStrategy;
     }
 
     private void initializeGrid() {

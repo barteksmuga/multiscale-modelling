@@ -5,7 +5,6 @@ import multiscale.models.Cell;
 import multiscale.models.Grid;
 import multiscale.services.Service;
 import multiscale.services.grainGrowth.neighbourhoodStrategies.NeighbourhoodStrategy;
-import multiscale.services.grainGrowth.neighbourhoodStrategies.vonNeumann.VonNeumannNeighbourhoodStrategy;
 
 public class GrainGrowthService extends Service {
 
@@ -16,7 +15,7 @@ public class GrainGrowthService extends Service {
     @Override
     protected void nextStep() {
         System.out.println("nextStep");
-        NeighbourhoodStrategy neighbourhoodStrategy = new VonNeumannNeighbourhoodStrategy(grid);
+        NeighbourhoodStrategy neighbourhoodStrategy = grid.getNeighbourhoodStrategy();
         Cell[][] localGrid = copyGrid();
         for (int y = 0; y < grid.getHeight(); ++y) {
             for (int x = 0; x < grid.getWidth(); ++x) {

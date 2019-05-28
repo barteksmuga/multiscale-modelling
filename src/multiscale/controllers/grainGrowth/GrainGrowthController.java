@@ -15,6 +15,9 @@ import multiscale.enums.grainGrowth.NeighbourhoodEnum;
 import multiscale.models.Grid;
 import multiscale.services.GridPaneService;
 import multiscale.services.grainGrowth.GrainGrowthService;
+import multiscale.services.grainGrowth.neighbourhoodStrategies.NeighbourhoodStrategy;
+import multiscale.services.grainGrowth.neighbourhoodStrategies.moore.MooreNeighbourhoodStrategy;
+import multiscale.services.grainGrowth.neighbourhoodStrategies.vonNeumann.VonNeumannNeighbourhoodStrategy;
 
 public class GrainGrowthController {
 
@@ -46,11 +49,12 @@ public class GrainGrowthController {
         boundaryConditionChoiceBox.setValue(BoundaryConditionEnum.PERIODICAL.getName());
         neighbourhoodChoiceBox.setValue(NeighbourhoodEnum.VON_NEUMANN.getName());
         insertModeChoiceBox.setValue(InsertModeEnum.CUSTOM.getName());
-        widthField.setText("10");
-        heightField.setText("10");
+        widthField.setText("50");
+        heightField.setText("50");
     }
 
     public void start(ActionEvent actionEvent) {
+        setNeighbourhoodStrategy();
         var service = new GrainGrowthService(grid, drawGridArea);
         service.run();
     }
@@ -69,20 +73,44 @@ public class GrainGrowthController {
     }
 
     private void initializeInsertModeChoiceBoxListener() {
-            insertModeChoiceBox.getSelectionModel()
-                    .selectedIndexProperty()
-                    .addListener((observable, oldValue, newValue) -> {
-                        String chosen = insertModeChoiceBox.getItems().get(newValue.intValue());
-                        if (chosen.equals(InsertModeEnum.RANDOM_WITH_RADIUS.getName())) {
-                            radiusField.setDisable(false);
-                            grainNumberField.setDisable(false);
-                        } else if (chosen.equals(InsertModeEnum.CUSTOM.getName())) {
-                            grainNumberField.setDisable(true);
-                            radiusField.setDisable(true);
-                        } else {
-                            grainNumberField.setDisable(false);
-                            radiusField.setDisable(true);
-                        }
-            });
+        insertModeChoiceBox.getSelectionModel()
+                .selectedIndexProperty()
+                .addListener((observable, oldValue, newValue) -> {
+                    String chosen = insertModeChoiceBox.getItems().get(newValue.intValue());
+                    if (chosen.equals(InsertModeEnum.RANDOM_WITH_RADIUS.getName())) {
+                        radiusField.setDisable(false);
+                        grainNumberField.setDisable(false);
+                    } else if (chosen.equals(InsertModeEnum.CUSTOM.getName())) {
+                        grainNumberField.setDisable(true);
+                        radiusField.setDisable(true);
+                    } else {
+                        grainNumberField.setDisable(false);
+                        radiusField.setDisable(true);
+                    }
+                });
+    }
+
+    private void setNeighbourhoodStrategy() {
+        NeighbourhoodStrategy neighbourhoodStrategy = getNeighbourhoodStrategyInstance();
+        grid.setNeighbourhoodStrategy(neighbourhoodStrategy);
+    }
+
+    private NeighbourhoodStrategy getNeighbourhoodStrategyInstance() {
+        String selectedNeighbourhood = neighbourhoodChoiceBox.getSelectionModel().getSelectedItem();
+        NeighbourhoodEnum selectedNeighbourhoodEnum = NeighbourhoodEnum.get(selectedNeighbourhood);
+        switch (selectedNeighbourhoodEnum) {
+            case VON_NEUMANN:
+                return new VonNeumannNeighbourhoodStrategy(grid);
+            case MOORE:
+                return new MooreNeighbourhoodStrategy(grid);
+            case RADIUS:
+//                return
+            case HEXAGONAL:
+//                return
+            case PENTAGONAL:
+//                return
+            default:
+                return new VonNeumannNeighbourhoodStrategy(grid);
+        }
     }
 }
