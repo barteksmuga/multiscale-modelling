@@ -12,12 +12,16 @@ import java.util.Random;
 
 public class InitialConditions {
     private static Random random = new Random();
+    private static int width;
+    private static int height;
 
     public static ObservableList<String> getGameOfLifeInitialConditionList() {
         return FXCollections.observableArrayList(InitialConditionEnum.getNames());
     }
 
     public static List<Point> getCondition(InitialConditionEnum key, Grid grid) {
+        width = grid.getWidth();
+        height = grid.getHeight();
         return createChosenCondition(key, grid);
     }
 
@@ -29,8 +33,6 @@ public class InitialConditions {
                 return createFixedCondition(x, y);
             case GLIDER:
                 return createGliderCondition(x, y);
-            case RANDOM:
-                return createRandomCondition(x, y);
             case OSCILLATOR:
                 return createOscillatorCondition(x, y);
             default:
@@ -40,42 +42,47 @@ public class InitialConditions {
 
     private static List<Point> createFixedCondition(int x, int y) {
         var list = new ArrayList<Point>();
-//        list.add(new Point(x, y));
-//        list.add(new Point(x + 1, y + 1));
-//        list.add(new Point(x + 2, y + 1));
-//        list.add(new Point(x + 3, y));
-//        list.add(new Point(x + 2, y - 1));
-//        list.add(new Point(x + 1, y - 1));
-
-        list.add(new Point(3, 6));
-        list.add(new Point(3 + 1, 6 + 1));
-        list.add(new Point(3 + 2, 6 + 1));
-        list.add(new Point(3 + 3, 6));
-        list.add(new Point(3 + 2, 6 - 1));
-        list.add(new Point(3 + 1, 6 - 1));
-
+        list.add(new Point(getX(x), y));
+        list.add(new Point(getX(x + 1), getY(y + 1)));
+        list.add(new Point(getX(x + 2), getY(y + 1)));
+        list.add(new Point(getX(x + 3), getY(y)));
+        list.add(new Point(getX(x + 2), getY(y - 1)));
+        list.add(new Point(getX(x + 1), getY(y - 1)));
         return list;
     }
 
     private static List<Point> createGliderCondition(int x, int y) {
         var list = new ArrayList<Point>();
-        list.add(new Point(3, 6));
-        list.add(new Point(3 + 1, 6));
-        list.add(new Point(3 + 1, 6 + 1));
-        list.add(new Point(3 + 2, 6 - 1));
-        return list;
-    }
-
-    private static List<Point> createRandomCondition(int x, int y) {
-        var list = new ArrayList<Point>();
+        list.add(new Point(getX(x), getY(y)));
+        list.add(new Point(getX(x + 1), getY(y)));
+        list.add(new Point(getX(x + 1), getY(y + 1)));
+        list.add(new Point(getX(x + 2), getY(y - 1)));
         return list;
     }
 
     private static List<Point> createOscillatorCondition(int x, int y) {
         var list = new ArrayList<Point>();
-        list.add(new Point(x, y - 1));
-        list.add(new Point(x, y));
-        list.add(new Point(x, y + 1));
+        list.add(new Point(getX(x), getY(y - 1)));
+        list.add(new Point(getX(x), getY(y)));
+        list.add(new Point(getX(x), getY(y + 1)));
         return list;
+    }
+
+    private static int getX(int x) {
+        return getCoordinate(x, width);
+    }
+
+    private static int getY(int y) {
+        return getCoordinate(y, height);
+    }
+
+    private static int getCoordinate(int coord, int maxVal) {
+        if (coord > maxVal - 1) {
+            coord = 0;
+        }
+        if (coord < 0) {
+            coord = maxVal - 1;
+        }
+        return coord;
     }
 }

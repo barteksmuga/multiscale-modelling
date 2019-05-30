@@ -28,8 +28,7 @@ public class GameOfLifeService extends Service {
         }
         appendToGrid();
         if (!continueProcessing()) {
-            timeline.stop();
-            System.out.println("timeline.stop()");
+            stop();
         }
     }
 

@@ -14,12 +14,13 @@
         </ScrollPane>
         <Button fx:id="drawButton" layoutX="30.0" layoutY="166.0" mnemonicParsing="false" onAction="#drawGrid" prefHeight="27.0" prefWidth="80.0" text="Rysuj" />
         <Button fx:id="startSimulationButton" layoutX="30.0" layoutY="201.0" mnemonicParsing="false" onAction="#start" prefHeight="27.0" prefWidth="80.0" text="Start" />
-        <Button fx:id="wipeResultsButton" layoutX="30.0" layoutY="236.0" mnemonicParsing="false" onAction="#wipeData" prefHeight="27.0" prefWidth="80.0" text="Wyczyść" />
+        <Button fx:id="wipeResultsButton" layoutX="30.0" layoutY="276.0" mnemonicParsing="false" onAction="#wipeData" prefHeight="27.0" prefWidth="80.0" text="Wyczyść" />
         <Label layoutX="11.0" layoutY="27.0" text="Wysokość" />
         <Label layoutX="78.0" layoutY="27.0" text="Szerokość" />
         <TextField fx:id="gridHeightField" layoutX="22.0" layoutY="53.0" prefHeight="27.0" prefWidth="42.0" />
         <TextField fx:id="gridWidthField" layoutX="89.0" layoutY="53.0" prefHeight="27.0" prefWidth="42.0" />
         <ChoiceBox fx:id="initialConditionChoiceBox" layoutX="15.0" layoutY="127.0" prefHeight="27.0" prefWidth="117.0" />
         <Label layoutX="8.0" layoutY="96.0" text="Warunek początkowy" />
+      <Button fx:id="stopSimulationButton" layoutX="30.0" layoutY="238.0" mnemonicParsing="false" onAction="#stop" prefHeight="27.0" prefWidth="80.0" text="Stop" />
     </children>
 </Pane>

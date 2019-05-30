@@ -12,6 +12,7 @@ import multiscale.enums.gameOfLife.InitialConditionEnum;
 import multiscale.enums.StateEnum;
 import multiscale.models.Grid;
 import multiscale.services.GridPaneService;
+import multiscale.services.Service;
 import multiscale.services.gameOfLife.GameOfLifeService;
 
 public class GameOfLifeController {
@@ -19,6 +20,7 @@ public class GameOfLifeController {
     @FXML Button wipeResultsButton;
     @FXML Button drawButton;
     @FXML Button startSimulationButton;
+    @FXML Button stopSimulationButton;
     @FXML TextField gridHeightField;
     @FXML TextField gridWidthField;
     @FXML ChoiceBox<String> initialConditionChoiceBox;
@@ -26,6 +28,7 @@ public class GameOfLifeController {
 
     private Grid grid;
     private GridPaneService gridPaneService;
+    private Service service;
 
     @FXML
     public void initialize() {
@@ -42,8 +45,12 @@ public class GameOfLifeController {
     }
 
     public void start(ActionEvent actionEvent) {
-        GameOfLifeService service = new GameOfLifeService(grid, drawGridArea);
+        service = new GameOfLifeService(grid, drawGridArea);
         service.run();
+    }
+
+    public void stop(ActionEvent actionEvent) {
+        service.stop();
     }
 
     public void wipeData(ActionEvent actionEvent) {
@@ -56,12 +63,19 @@ public class GameOfLifeController {
 
     private void applyChosenCondition() {
         var initialCondition = initialConditionChoiceBox.getSelectionModel().getSelectedItem();
-        if (initialCondition != null) {
-            var condition = InitialConditions.getCondition(InitialConditionEnum.get(initialCondition), grid);
+        var initialConditionEnum = InitialConditionEnum.get(initialCondition);
+        if (!isInitialConditionRandomOrCustom(initialConditionEnum)) {
+            var condition = InitialConditions.getCondition(initialConditionEnum, grid);
             for (var point: condition) {
                 grid.getGrid()[point.y][point.x].setState(StateEnum.ACTIVE.getStateValue());
             }
         }
-//        grid.setRandomCellActive();
+        if (initialConditionEnum == InitialConditionEnum.RANDOM) {
+            grid.setRandomCellActive();
+        }
+    }
+
+    private boolean isInitialConditionRandomOrCustom(InitialConditionEnum initialConditionEnum) {
+        return initialConditionEnum == InitialConditionEnum.RANDOM || initialConditionEnum == InitialConditionEnum.CUSTOM;
     }
 }

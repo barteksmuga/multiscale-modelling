@@ -21,7 +21,7 @@ public enum InitialConditionEnum {
     }
 
     public static InitialConditionEnum get(String value) {
-        for (var tmp: values()) {
+        for (var tmp : values()) {
             if (tmp.getName().equals(value)) {
                 return tmp;
             }

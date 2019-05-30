@@ -65,7 +65,13 @@ public abstract class Service {
     }
 
     public void run() {
+        System.out.println("timeline.play()");
         timeline.play();
+    }
+
+    public void stop() {
+        System.out.println("timeline.stop()");
+        timeline.stop();
     }
 
     protected abstract void nextStep();
