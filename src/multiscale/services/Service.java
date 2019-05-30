@@ -12,6 +12,7 @@ import multiscale.services.boundaryConditions.AbsorbingBoundaryCondition;
 import multiscale.services.boundaryConditions.BoundaryCondition;
 import multiscale.services.boundaryConditions.PeriodicalBoundaryCondition;
 import multiscale.services.grainGrowth.neighbourhoodStrategies.NeighbourhoodStrategy;
+import multiscale.services.grainGrowth.neighbourhoodStrategies.hexagonal.HexagonalNeighbourhoodStrategy;
 import multiscale.services.grainGrowth.neighbourhoodStrategies.moore.MooreNeighbourhoodStrategy;
 import multiscale.services.grainGrowth.neighbourhoodStrategies.pentagonal.PentagonalNeighbourhoodStrategy;
 import multiscale.services.grainGrowth.neighbourhoodStrategies.vonNeumann.VonNeumannNeighbourhoodStrategy;
@@ -69,7 +70,7 @@ public abstract class Service {
             case RADIUS:
 //                return
             case HEXAGONAL:
-//                return
+                return new HexagonalNeighbourhoodStrategy(grid, boundaryCondition);
             case PENTAGONAL:
                 return new PentagonalNeighbourhoodStrategy(grid, boundaryCondition);
             default:
