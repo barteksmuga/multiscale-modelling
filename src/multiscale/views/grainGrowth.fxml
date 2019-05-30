@@ -22,9 +22,9 @@
         <ChoiceBox fx:id="insertModeChoiceBox" layoutX="13.0" layoutY="120.0" prefHeight="27.0" prefWidth="135.0" />
         <Label layoutX="20.0" layoutY="330.0" text="Warunki brzegowe" />
       <TextField fx:id="grainNumberField" layoutX="16.0" layoutY="192.0" prefHeight="27.0" prefWidth="135.0" />
-      <Label layoutX="20.0" layoutY="175.0" text="Liczba ziaren" />
+      <Label fx:id="firstLabel" layoutX="20.0" layoutY="175.0"/>
       <TextField fx:id="radiusField" layoutX="16.0" layoutY="243.0" prefHeight="27.0" prefWidth="135.0" />
-      <Label layoutX="20.0" layoutY="226.0" text="Promień" />
+      <Label fx:id="secondLabel" layoutX="20.0" layoutY="226.0"/>
       <ChoiceBox fx:id="boundaryConditionChoiceBox" layoutX="14.0" layoutY="347.0" prefHeight="27.0" prefWidth="135.0" />
       <Label layoutX="25.0" layoutY="395.0" text="Sąsiedztwo" />
       <ChoiceBox fx:id="neighbourhoodChoiceBox" layoutX="16.0" layoutY="412.0" prefHeight="27.0" prefWidth="135.0" />

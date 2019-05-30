@@ -4,6 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import multiscale.constants.grainGrowth.ChoiceBoxOptions;
@@ -19,6 +20,8 @@ import multiscale.services.grainGrowth.insertMode.InsertModeHelper;
 
 public class GrainGrowthController {
 
+    @FXML Label firstLabel;
+    @FXML Label secondLabel;
     @FXML TextField grainNumberField;
     @FXML TextField radiusField;
     @FXML ChoiceBox<String> boundaryConditionChoiceBox;
@@ -39,7 +42,6 @@ public class GrainGrowthController {
     @FXML
     public void initialize() {
         gridPaneService = new GridPaneService();
-        radiusField.setDisable(true);
         insertModeChoiceBox.setItems(ChoiceBoxOptions.insertModeList());
         boundaryConditionChoiceBox.setItems(ChoiceBoxOptions.boundaryConditionList());
         neighbourhoodChoiceBox.setItems(ChoiceBoxOptions.neighbourhoodList());
@@ -88,15 +90,33 @@ public class GrainGrowthController {
                 .selectedIndexProperty()
                 .addListener((observable, oldValue, newValue) -> {
                     String chosen = insertModeChoiceBox.getItems().get(newValue.intValue());
-                    if (chosen.equals(InsertModeEnum.RANDOM_WITH_RADIUS.getName())) {
-                        radiusField.setDisable(false);
-                        grainNumberField.setDisable(false);
-                    } else if (chosen.equals(InsertModeEnum.CUSTOM.getName())) {
-                        grainNumberField.setDisable(true);
-                        radiusField.setDisable(true);
-                    } else {
-                        grainNumberField.setDisable(false);
-                        radiusField.setDisable(true);
+                    InsertModeEnum insertModeEnum = InsertModeEnum.get(chosen);
+                    insertModeEnum = insertModeEnum == null ? InsertModeEnum.CUSTOM : insertModeEnum;
+                    switch (insertModeEnum) {
+                        case HOMOGENEOUS:
+                            firstLabel.setText("wiersze");
+                            grainNumberField.setVisible(true);
+                            secondLabel.setText("kolumny");
+                            radiusField.setVisible(true);
+                            break;
+                        case RANDOM_WITH_RADIUS:
+                            radiusField.setVisible(true);
+                            grainNumberField.setVisible(true);
+                            firstLabel.setText("Liczba ziaren");
+                            secondLabel.setText("Promień");
+                            break;
+                        case CUSTOM:
+                            grainNumberField.setVisible(false);
+                            radiusField.setVisible(false);
+                            firstLabel.setText("");
+                            secondLabel.setText("");
+                            break;
+                        case RANDOM:
+                            firstLabel.setText("Liczba ziaren");
+                            grainNumberField.setVisible(true);
+                            radiusField.setVisible(false);
+                            secondLabel.setText("");
+                            break;
                     }
                 });
     }
@@ -105,16 +125,18 @@ public class GrainGrowthController {
         String insertMode = insertModeChoiceBox.getSelectionModel().getSelectedItem();
         InsertModeEnum insertModeEnum = InsertModeEnum.get(insertMode);
         insertModeEnum = insertModeEnum == null ? InsertModeEnum.CUSTOM : insertModeEnum;
+        int grainNumber;
         switch (insertModeEnum) {
             case RANDOM:
-                int grainNumber = Integer.valueOf(grainNumberField.getText());
+                grainNumber = Integer.valueOf(grainNumberField.getText());
                 InsertModeHelper.applyRandomInsertMode(grid, grainNumber);
-                break;
-            case CUSTOM:
                 break;
             case RANDOM_WITH_RADIUS:
                 break;
             case HOMOGENEOUS:
+                int rowGrainNumber = Integer.valueOf(grainNumberField.getText());
+                int columnGrainNumber = Integer.valueOf(radiusField.getText());
+                InsertModeHelper.applyHomogeneousInsertMode(grid, rowGrainNumber, columnGrainNumber);
                 break;
         }
     }
