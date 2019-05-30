@@ -2,6 +2,7 @@ package multiscale.services.gameOfLife;
 
 import javafx.scene.layout.GridPane;
 import multiscale.enums.StateEnum;
+import multiscale.enums.grainGrowth.NeighbourhoodEnum;
 import multiscale.models.Cell;
 import multiscale.models.Grid;
 import multiscale.services.Service;
@@ -9,7 +10,7 @@ import multiscale.services.Service;
 public class GameOfLifeService extends Service {
 
     public GameOfLifeService(Grid grid, GridPane gridPane) {
-        super(grid, gridPane);
+        super(grid, gridPane, NeighbourhoodEnum.MOORE);
     }
 
     @Override

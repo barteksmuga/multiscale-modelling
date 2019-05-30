@@ -1,6 +1,7 @@
 package multiscale.services.grainGrowth;
 
 import javafx.scene.layout.GridPane;
+import multiscale.enums.grainGrowth.NeighbourhoodEnum;
 import multiscale.models.Cell;
 import multiscale.models.Grid;
 import multiscale.services.Service;
@@ -8,14 +9,13 @@ import multiscale.services.grainGrowth.neighbourhoodStrategies.NeighbourhoodStra
 
 public class GrainGrowthService extends Service {
 
-    public GrainGrowthService(Grid grid, GridPane gridPane) {
-        super(grid, gridPane);
+    public GrainGrowthService(Grid grid, GridPane gridPane, NeighbourhoodEnum neighbourhoodEnum) {
+        super(grid, gridPane, neighbourhoodEnum);
     }
 
     @Override
     protected void nextStep() {
         System.out.println("nextStep");
-        NeighbourhoodStrategy neighbourhoodStrategy = grid.getNeighbourhoodStrategy();
         Cell[][] localGrid = copyGrid();
         for (int y = 0; y < grid.getHeight(); ++y) {
             for (int x = 0; x < grid.getWidth(); ++x) {

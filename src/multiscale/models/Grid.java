@@ -19,7 +19,6 @@ public class Grid {
     private Cell[][] grid;
     private int ruleIndicator;
     private ModeEnum mode;
-    private NeighbourhoodStrategy neighbourhoodStrategy;
 
     public Grid(int width, int height, ModeEnum mode) {
         this.width = width;
@@ -38,7 +37,7 @@ public class Grid {
 
     public void setRandomCellActive() {
         var random = new Random();
-        for (int i=0; i<750; ++i) {
+        for (int i = 0; i < (width + height); ++i) {
             int hIndex = random.nextInt(height);
             int wIndex = random.nextInt(width);
             grid[hIndex][wIndex].setState(StateEnum.ACTIVE.getStateValue());
@@ -73,19 +72,11 @@ public class Grid {
         this.grid = grid;
     }
 
-    public NeighbourhoodStrategy getNeighbourhoodStrategy() {
-        return neighbourhoodStrategy;
-    }
-
-    public void setNeighbourhoodStrategy(NeighbourhoodStrategy neighbourhoodStrategy) {
-        this.neighbourhoodStrategy = neighbourhoodStrategy;
-    }
-
     private void initializeGrid() {
         grid = new Cell[height][width];
         StateEnum initialState = getInitialState();
-        for (int i=0; i<height; ++i) {
-            for (int j=0; j<width; ++j) {
+        for (int i = 0; i < height; ++i) {
+            for (int j = 0; j < width; ++j) {
                 Point point = new Point(j, i);
                 grid[i][j] = buildCell(point, initialState.getStateValue());
             }

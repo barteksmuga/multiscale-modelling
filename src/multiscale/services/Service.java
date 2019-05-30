@@ -5,21 +5,59 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.layout.GridPane;
 import javafx.util.Duration;
+import multiscale.enums.grainGrowth.NeighbourhoodEnum;
 import multiscale.models.Grid;
+import multiscale.services.grainGrowth.neighbourhoodStrategies.NeighbourhoodStrategy;
+import multiscale.services.grainGrowth.neighbourhoodStrategies.moore.MooreNeighbourhoodStrategy;
+import multiscale.services.grainGrowth.neighbourhoodStrategies.vonNeumann.VonNeumannNeighbourhoodStrategy;
 
 import static multiscale.constants.WindowConstants.INTERVAL;
+import static multiscale.enums.grainGrowth.NeighbourhoodEnum.HEXAGONAL;
+import static multiscale.enums.grainGrowth.NeighbourhoodEnum.MOORE;
+import static multiscale.enums.grainGrowth.NeighbourhoodEnum.PENTAGONAL;
+import static multiscale.enums.grainGrowth.NeighbourhoodEnum.RADIUS;
+import static multiscale.enums.grainGrowth.NeighbourhoodEnum.VON_NEUMANN;
 
 public abstract class Service {
     protected Grid grid;
     protected GridPane gridPane;
     protected GridPaneService gridPaneService;
     protected Timeline timeline;
+    protected NeighbourhoodStrategy neighbourhoodStrategy;
 
-    public Service(Grid grid, GridPane gridPane) {
+    public Service(Grid grid, GridPane gridPane, NeighbourhoodEnum neighbourhoodEnum) {
         this.grid = grid;
         this.gridPane = gridPane;
         this.gridPaneService = new GridPaneService();
 
+        initializeNeighbourhood(neighbourhoodEnum);
+        initializeTimeline();
+    }
+
+    private void initializeNeighbourhood(NeighbourhoodEnum neighbourhoodEnum) {
+        if (neighbourhoodEnum != null) {
+            this.neighbourhoodStrategy = getNeighbourhoodStrategyInstance(neighbourhoodEnum);
+        }
+    }
+
+    private NeighbourhoodStrategy getNeighbourhoodStrategyInstance(NeighbourhoodEnum neighbourhoodEnum) {
+        switch (neighbourhoodEnum) {
+            case VON_NEUMANN:
+                return new VonNeumannNeighbourhoodStrategy(grid);
+            case MOORE:
+                return new MooreNeighbourhoodStrategy(grid);
+            case RADIUS:
+//                return
+            case HEXAGONAL:
+//                return
+            case PENTAGONAL:
+//                return
+            default:
+                return new VonNeumannNeighbourhoodStrategy(grid);
+        }
+    }
+
+    private void initializeTimeline() {
         timeline = new Timeline(new KeyFrame(Duration.millis(INTERVAL), event -> {
             nextStep();
         }));

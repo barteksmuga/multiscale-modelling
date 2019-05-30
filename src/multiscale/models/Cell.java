@@ -16,6 +16,7 @@ import static multiscale.enums.StateEnum.INACTIVE;
 
 public class Cell extends StackPane {
     private static final AtomicInteger idGenerator = new AtomicInteger(1);
+    private static int currentState = 0;
     private int state;
     private int cId;
     private Point point;
@@ -57,11 +58,17 @@ public class Cell extends StackPane {
 
     private void incrementState() {
         ++this.state;
+        ++currentState;
         updateRectangle();
     }
 
     private void revertState() {
         this.state = this.state == INACTIVE.getStateValue() ? ACTIVE.getStateValue() : INACTIVE.getStateValue();
+        updateRectangle();
+    }
+
+    public void setAutoState() {
+        this.state = ++currentState;
         updateRectangle();
     }
 

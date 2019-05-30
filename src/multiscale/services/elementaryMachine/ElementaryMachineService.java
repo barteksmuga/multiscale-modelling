@@ -11,7 +11,7 @@ import java.util.List;
 public class ElementaryMachineService extends Service {
 
     public ElementaryMachineService(Grid grid, GridPane gridPane) {
-        super(grid, gridPane);
+        super(grid, gridPane, null);
     }
 
     @Override

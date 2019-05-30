@@ -8,16 +8,13 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import multiscale.constants.grainGrowth.ChoiceBoxOptions;
 import multiscale.enums.ModeEnum;
-import multiscale.enums.StateEnum;
 import multiscale.enums.grainGrowth.BoundaryConditionEnum;
 import multiscale.enums.grainGrowth.InsertModeEnum;
 import multiscale.enums.grainGrowth.NeighbourhoodEnum;
 import multiscale.models.Grid;
 import multiscale.services.GridPaneService;
 import multiscale.services.grainGrowth.GrainGrowthService;
-import multiscale.services.grainGrowth.neighbourhoodStrategies.NeighbourhoodStrategy;
-import multiscale.services.grainGrowth.neighbourhoodStrategies.moore.MooreNeighbourhoodStrategy;
-import multiscale.services.grainGrowth.neighbourhoodStrategies.vonNeumann.VonNeumannNeighbourhoodStrategy;
+import multiscale.services.grainGrowth.insertMode.InsertModeHelper;
 
 public class GrainGrowthController {
 
@@ -54,8 +51,8 @@ public class GrainGrowthController {
     }
 
     public void start(ActionEvent actionEvent) {
-        setNeighbourhoodStrategy();
-        var service = new GrainGrowthService(grid, drawGridArea);
+        NeighbourhoodEnum neighbourhoodStrategy = getNeighbourhoodStrategyEnum();
+        var service = new GrainGrowthService(grid, drawGridArea, neighbourhoodStrategy);
         service.run();
     }
 
@@ -69,6 +66,7 @@ public class GrainGrowthController {
         int gridHeight = Integer.valueOf(heightField.getText());
 
         grid = new Grid(gridWidth, gridHeight, ModeEnum.GRAIN_GROWTH);
+        applyChosenInsertMode();
         gridPaneService.drawArrayOnGridPane(drawGridArea, grid);
     }
 
@@ -90,27 +88,28 @@ public class GrainGrowthController {
                 });
     }
 
-    private void setNeighbourhoodStrategy() {
-        NeighbourhoodStrategy neighbourhoodStrategy = getNeighbourhoodStrategyInstance();
-        grid.setNeighbourhoodStrategy(neighbourhoodStrategy);
+    private void applyChosenInsertMode() {
+        String insertMode = insertModeChoiceBox.getSelectionModel().getSelectedItem();
+        InsertModeEnum insertModeEnum = InsertModeEnum.get(insertMode);
+        insertModeEnum = insertModeEnum == null ? InsertModeEnum.CUSTOM : insertModeEnum;
+        switch (insertModeEnum) {
+            case RANDOM:
+                int grainNumber = Integer.valueOf(grainNumberField.getText());
+                InsertModeHelper.applyRandomInsertMode(grid, grainNumber);
+                break;
+            case CUSTOM:
+                break;
+            case RANDOM_WITH_RADIUS:
+                break;
+            case HOMOGENEOUS:
+                break;
+        }
     }
 
-    private NeighbourhoodStrategy getNeighbourhoodStrategyInstance() {
+
+    private NeighbourhoodEnum getNeighbourhoodStrategyEnum() {
         String selectedNeighbourhood = neighbourhoodChoiceBox.getSelectionModel().getSelectedItem();
         NeighbourhoodEnum selectedNeighbourhoodEnum = NeighbourhoodEnum.get(selectedNeighbourhood);
-        switch (selectedNeighbourhoodEnum) {
-            case VON_NEUMANN:
-                return new VonNeumannNeighbourhoodStrategy(grid);
-            case MOORE:
-                return new MooreNeighbourhoodStrategy(grid);
-            case RADIUS:
-//                return
-            case HEXAGONAL:
-//                return
-            case PENTAGONAL:
-//                return
-            default:
-                return new VonNeumannNeighbourhoodStrategy(grid);
-        }
+        return selectedNeighbourhoodEnum == null ? NeighbourhoodEnum.VON_NEUMANN : selectedNeighbourhoodEnum;
     }
 }
