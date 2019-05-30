@@ -2,20 +2,21 @@ package multiscale.services.grainGrowth.neighbourhoodStrategies.moore;
 
 import multiscale.models.Cell;
 import multiscale.models.Grid;
+import multiscale.services.boundaryConditions.BoundaryCondition;
 import multiscale.services.grainGrowth.neighbourhoodStrategies.NeighbourhoodStrategy;
 
 public class MooreNeighbourhoodStrategy extends NeighbourhoodStrategy {
 
-    public MooreNeighbourhoodStrategy(Grid grid) {
-        super(grid);
+    public MooreNeighbourhoodStrategy(Grid grid, BoundaryCondition boundaryCondition) {
+        super(grid, boundaryCondition);
     }
 
     @Override
     public void countNeighbourStates(int x, int y, Cell[][] grid) {
-        int correctPreviousX = getCorrectPreviousX(x - 1);
-        int correctFollowingX = getCorrectFollowingX(x + 1);
-        int correctPreviousY = getCorrectPreviousY(y - 1);
-        int correctFollowingY = getCorrectFollowingY(y + 1);
+        int correctPreviousX = getX(x - 1);
+        int correctFollowingX = getX(x + 1);
+        int correctPreviousY = getY(y - 1);
+        int correctFollowingY = getY(y + 1);
 
         countStatesAbove(grid, x, correctPreviousX, correctFollowingX, correctPreviousY);
         countStatesBelow(grid, x, correctPreviousX, correctFollowingX, correctFollowingY);

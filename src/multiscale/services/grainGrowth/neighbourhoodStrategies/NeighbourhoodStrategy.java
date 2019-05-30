@@ -3,6 +3,7 @@ package multiscale.services.grainGrowth.neighbourhoodStrategies;
 import multiscale.enums.StateEnum;
 import multiscale.models.Cell;
 import multiscale.models.Grid;
+import multiscale.services.boundaryConditions.BoundaryCondition;
 
 import java.util.Comparator;
 import java.util.HashMap;
@@ -14,10 +15,12 @@ import java.util.stream.Collectors;
 public abstract class NeighbourhoodStrategy {
     protected Grid grid;
     protected Map<Integer, Integer> neighbourMap;
+    protected BoundaryCondition boundaryCondition;
 
-    public NeighbourhoodStrategy(Grid grid) {
+    public NeighbourhoodStrategy(Grid grid, BoundaryCondition boundaryCondition) {
         this.grid = grid;
         neighbourMap = new HashMap<>();
+        this.boundaryCondition = boundaryCondition;
     }
 
     public int mostFrequentNeighbourState(int x, int y, Cell[][] localGrid) {
@@ -60,31 +63,11 @@ public abstract class NeighbourhoodStrategy {
         neighbourMap.clear();
     }
 
-    protected int getCorrectPreviousX(int previousX) {
-        if (previousX < 0) {
-            previousX = grid.getWidth() - 1;
-        }
-        return previousX;
+    protected int getX(int x) {
+        return boundaryCondition.getX(x);
     }
 
-    protected int getCorrectFollowingX(int followingX) {
-        if (followingX > grid.getWidth() - 1) {
-            followingX = 0;
-        }
-        return followingX;
-    }
-
-    protected int getCorrectPreviousY(int previousY) {
-        if (previousY < 0) {
-            previousY = grid.getHeight() - 1;
-        }
-        return previousY;
-    }
-
-    protected int getCorrectFollowingY(int followingY) {
-        if (followingY > grid.getHeight() - 1) {
-            followingY = 0;
-        }
-        return followingY;
+    protected int getY(int y) {
+        return boundaryCondition.getY(y);
     }
 }

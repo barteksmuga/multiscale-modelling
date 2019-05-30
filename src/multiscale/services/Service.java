@@ -5,18 +5,17 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.layout.GridPane;
 import javafx.util.Duration;
+import multiscale.enums.grainGrowth.BoundaryConditionEnum;
 import multiscale.enums.grainGrowth.NeighbourhoodEnum;
 import multiscale.models.Grid;
+import multiscale.services.boundaryConditions.AbsorbingBoundaryCondition;
+import multiscale.services.boundaryConditions.BoundaryCondition;
+import multiscale.services.boundaryConditions.PeriodicalBoundaryCondition;
 import multiscale.services.grainGrowth.neighbourhoodStrategies.NeighbourhoodStrategy;
 import multiscale.services.grainGrowth.neighbourhoodStrategies.moore.MooreNeighbourhoodStrategy;
 import multiscale.services.grainGrowth.neighbourhoodStrategies.vonNeumann.VonNeumannNeighbourhoodStrategy;
 
 import static multiscale.constants.WindowConstants.INTERVAL;
-import static multiscale.enums.grainGrowth.NeighbourhoodEnum.HEXAGONAL;
-import static multiscale.enums.grainGrowth.NeighbourhoodEnum.MOORE;
-import static multiscale.enums.grainGrowth.NeighbourhoodEnum.PENTAGONAL;
-import static multiscale.enums.grainGrowth.NeighbourhoodEnum.RADIUS;
-import static multiscale.enums.grainGrowth.NeighbourhoodEnum.VON_NEUMANN;
 
 public abstract class Service {
     protected Grid grid;
@@ -24,14 +23,34 @@ public abstract class Service {
     protected GridPaneService gridPaneService;
     protected Timeline timeline;
     protected NeighbourhoodStrategy neighbourhoodStrategy;
+    protected BoundaryCondition boundaryCondition;
 
-    public Service(Grid grid, GridPane gridPane, NeighbourhoodEnum neighbourhoodEnum) {
+    public Service(Grid grid, GridPane gridPane, NeighbourhoodEnum neighbourhoodEnum,
+                   BoundaryConditionEnum boundaryConditionEnum) {
         this.grid = grid;
         this.gridPane = gridPane;
         this.gridPaneService = new GridPaneService();
 
+        initializeBoundaryCondition(boundaryConditionEnum);
         initializeNeighbourhood(neighbourhoodEnum);
         initializeTimeline();
+    }
+
+    private void initializeBoundaryCondition(BoundaryConditionEnum boundaryConditionEnum) {
+        if (boundaryConditionEnum != null) {
+            this.boundaryCondition = getBoundaryConditionInstance(boundaryConditionEnum);
+        }
+    }
+
+    private BoundaryCondition getBoundaryConditionInstance(BoundaryConditionEnum boundaryConditionEnum) {
+        switch (boundaryConditionEnum) {
+            case PERIODICAL:
+                return new PeriodicalBoundaryCondition(grid.getWidth(), grid.getHeight());
+            case ABSORBING:
+                return new AbsorbingBoundaryCondition(grid.getWidth(), grid.getHeight());
+            default:
+                return new PeriodicalBoundaryCondition(grid.getWidth(), grid.getHeight());
+        }
     }
 
     private void initializeNeighbourhood(NeighbourhoodEnum neighbourhoodEnum) {
@@ -43,9 +62,9 @@ public abstract class Service {
     private NeighbourhoodStrategy getNeighbourhoodStrategyInstance(NeighbourhoodEnum neighbourhoodEnum) {
         switch (neighbourhoodEnum) {
             case VON_NEUMANN:
-                return new VonNeumannNeighbourhoodStrategy(grid);
+                return new VonNeumannNeighbourhoodStrategy(grid, boundaryCondition);
             case MOORE:
-                return new MooreNeighbourhoodStrategy(grid);
+                return new MooreNeighbourhoodStrategy(grid, boundaryCondition);
             case RADIUS:
 //                return
             case HEXAGONAL:
@@ -53,7 +72,7 @@ public abstract class Service {
             case PENTAGONAL:
 //                return
             default:
-                return new VonNeumannNeighbourhoodStrategy(grid);
+                return new VonNeumannNeighbourhoodStrategy(grid, boundaryCondition);
         }
     }
 
@@ -80,17 +99,11 @@ public abstract class Service {
         gridPaneService.drawArrayOnGridPane(gridPane, grid);
     }
 
-    protected int getCorrectPreviousX(int previousX, int maxValue) {
-        if (previousX < 0) {
-            previousX = maxValue;
-        }
-        return previousX;
+    protected int getX(int x) {
+        return boundaryCondition.getX(x);
     }
 
-    protected int getCorrectFollowingX(int followingX, int maxValue) {
-        if (followingX > maxValue) {
-            followingX = 0;
-        }
-        return followingX;
+    protected int getY(int y) {
+        return boundaryCondition.getY(y);
     }
 }

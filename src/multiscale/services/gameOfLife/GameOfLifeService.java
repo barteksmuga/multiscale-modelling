@@ -2,6 +2,7 @@ package multiscale.services.gameOfLife;
 
 import javafx.scene.layout.GridPane;
 import multiscale.enums.StateEnum;
+import multiscale.enums.grainGrowth.BoundaryConditionEnum;
 import multiscale.enums.grainGrowth.NeighbourhoodEnum;
 import multiscale.models.Cell;
 import multiscale.models.Grid;
@@ -10,7 +11,7 @@ import multiscale.services.Service;
 public class GameOfLifeService extends Service {
 
     public GameOfLifeService(Grid grid, GridPane gridPane) {
-        super(grid, gridPane, NeighbourhoodEnum.MOORE);
+        super(grid, gridPane, NeighbourhoodEnum.MOORE, BoundaryConditionEnum.PERIODICAL);
     }
 
     @Override
@@ -67,28 +68,24 @@ public class GameOfLifeService extends Service {
     }
 
     private int countNeighbourAbove(Cell[][] grid, int x, int y) {
-        int previousX = getCorrectPreviousX((x - 1), grid[0].length - 1);
-        int followingX = getCorrectFollowingX((x + 1), grid[0].length - 1);
-        int aboveY = (y - 1);
-        if (aboveY < 0) {
-            aboveY = grid.length - 1;
-        }
+        int previousX = getX((x - 1));
+        int followingX = getX((x + 1));
+        int aboveY = getY(y - 1);
+
         return countStatesForProperValues(grid, aboveY, previousX, x, followingX);
     }
 
     private int countNeighbourBelow(Cell[][] grid, int x, int y) {
-        int previousX = getCorrectPreviousX((x - 1), grid[0].length - 1);
-        int followingX = getCorrectFollowingX((x + 1), grid[0].length - 1);
-        int belowY = (y + 1);
-        if (belowY >= grid.length) {
-            belowY = 0;
-        }
+        int previousX = getX((x - 1));
+        int followingX = getX((x + 1));
+        int belowY = getY(y + 1);
+
         return countStatesForProperValues(grid, belowY, previousX, x, followingX);
     }
 
     private int countNeighbourBesides(Cell[][] grid, int x, int y) {
-        int previousX = getCorrectPreviousX((x - 1), grid[0].length - 1);
-        int followingX = getCorrectFollowingX((x + 1), grid[0].length - 1);
+        int previousX = getX((x - 1));
+        int followingX = getX((x + 1));
         int count = grid[y][previousX].getState();
         count += grid[y][followingX].getState();
         return count;

@@ -1,16 +1,17 @@
 package multiscale.services.grainGrowth;
 
 import javafx.scene.layout.GridPane;
+import multiscale.enums.grainGrowth.BoundaryConditionEnum;
 import multiscale.enums.grainGrowth.NeighbourhoodEnum;
 import multiscale.models.Cell;
 import multiscale.models.Grid;
 import multiscale.services.Service;
-import multiscale.services.grainGrowth.neighbourhoodStrategies.NeighbourhoodStrategy;
 
 public class GrainGrowthService extends Service {
 
-    public GrainGrowthService(Grid grid, GridPane gridPane, NeighbourhoodEnum neighbourhoodEnum) {
-        super(grid, gridPane, neighbourhoodEnum);
+    public GrainGrowthService(Grid grid, GridPane gridPane, NeighbourhoodEnum neighbourhoodEnum,
+                              BoundaryConditionEnum boundaryConditionEnum) {
+        super(grid, gridPane, neighbourhoodEnum, boundaryConditionEnum);
     }
 
     @Override

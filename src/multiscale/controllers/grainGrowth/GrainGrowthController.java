@@ -13,6 +13,7 @@ import multiscale.enums.grainGrowth.InsertModeEnum;
 import multiscale.enums.grainGrowth.NeighbourhoodEnum;
 import multiscale.models.Grid;
 import multiscale.services.GridPaneService;
+import multiscale.services.Service;
 import multiscale.services.grainGrowth.GrainGrowthService;
 import multiscale.services.grainGrowth.insertMode.InsertModeHelper;
 
@@ -25,6 +26,7 @@ public class GrainGrowthController {
     @FXML GridPane drawGridArea;
     @FXML Button drawFirstRowButton;
     @FXML Button startSimulationButton;
+    @FXML Button stopSimulationButton;
     @FXML Button wipeResultsButton;
     @FXML TextField heightField;
     @FXML TextField widthField;
@@ -32,6 +34,7 @@ public class GrainGrowthController {
 
     private Grid grid;
     private GridPaneService gridPaneService;
+    private Service service;
 
     @FXML
     public void initialize() {
@@ -51,11 +54,21 @@ public class GrainGrowthController {
     }
 
     public void start(ActionEvent actionEvent) {
-        NeighbourhoodEnum neighbourhoodStrategy = getNeighbourhoodStrategyEnum();
-        var service = new GrainGrowthService(grid, drawGridArea, neighbourhoodStrategy);
+        NeighbourhoodEnum neighbourhoodStrategyEnum = getNeighbourhoodStrategyEnum();
+        BoundaryConditionEnum boundaryConditionEnum = getBoundaryConditionEnum();
+        service = new GrainGrowthService(grid, drawGridArea, neighbourhoodStrategyEnum, boundaryConditionEnum);
         service.run();
     }
 
+    public void stop(ActionEvent actionEvent) {
+        service.stop();
+    }
+
+    private BoundaryConditionEnum getBoundaryConditionEnum() {
+        String chosenBC = boundaryConditionChoiceBox.getSelectionModel().getSelectedItem();
+        BoundaryConditionEnum chosenEnum = BoundaryConditionEnum.get(chosenBC);
+        return chosenEnum == null ? BoundaryConditionEnum.PERIODICAL : chosenEnum;
+    }
 
     public void wipeData(ActionEvent actionEvent) {
         gridPaneService.wipeGridPaneData(drawGridArea);

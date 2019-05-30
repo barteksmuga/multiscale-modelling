@@ -2,6 +2,7 @@ package multiscale.services.elementaryMachine;
 
 import javafx.scene.layout.GridPane;
 import multiscale.constants.elementaryMachine.Rules;
+import multiscale.enums.grainGrowth.BoundaryConditionEnum;
 import multiscale.models.Cell;
 import multiscale.models.Grid;
 import multiscale.services.Service;
@@ -11,7 +12,7 @@ import java.util.List;
 public class ElementaryMachineService extends Service {
 
     public ElementaryMachineService(Grid grid, GridPane gridPane) {
-        super(grid, gridPane, null);
+        super(grid, gridPane, null, BoundaryConditionEnum.PERIODICAL);
     }
 
     @Override
@@ -38,12 +39,12 @@ public class ElementaryMachineService extends Service {
     }
 
     private int getNextCellState(Cell[][] grid, int step, int cell) {
-        cell = getCorrectFollowingX(cell, grid[0].length - 1);
+        cell = getX(cell);
         return grid[step][cell].getState();
     }
 
     private int getPreviousCellState(Cell[][] grid, int step, int cell) {
-        cell = getCorrectPreviousX(cell, grid[0].length - 1);
+        cell = getX(cell);
         return grid[step][cell].getState();
     }
 }
