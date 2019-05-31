@@ -5,7 +5,9 @@ import multiscale.enums.ModeEnum;
 import multiscale.enums.StateEnum;
 import multiscale.services.grainGrowth.neighbourhoodStrategies.NeighbourhoodStrategy;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 import static multiscale.constants.WindowConstants.DRAW_GRID_AREA_HEIGHT;
@@ -19,11 +21,13 @@ public class Grid {
     private Cell[][] grid;
     private int ruleIndicator;
     private ModeEnum mode;
+    private int cellCount;
 
     public Grid(int width, int height, ModeEnum mode) {
         this.width = width;
         this.height = height;
         this.mode = mode;
+        this.cellCount = 0;
         initializeGrid();
     }
 
@@ -42,6 +46,15 @@ public class Grid {
             int wIndex = random.nextInt(width);
             grid[hIndex][wIndex].setState(StateEnum.ACTIVE.getStateValue());
         }
+    }
+
+    public Cell getCellByCId(final int cId) {
+        Optional<Cell> cell = Arrays.stream(grid)
+                .parallel()
+                .flatMap(Arrays::stream)
+                .filter(current -> current.getcId() == cId)
+                .findFirst();
+        return cell.orElse(null);
     }
 
     public void setFirstRow(List<Cell> firstRow) {
@@ -72,6 +85,10 @@ public class Grid {
         this.grid = grid;
     }
 
+    public int getCellCount() {
+        return cellCount;
+    }
+
     private void initializeGrid() {
         grid = new Cell[height][width];
         StateEnum initialState = getInitialState();
@@ -84,6 +101,7 @@ public class Grid {
     }
 
     private Cell buildCell(Point point, int state) {
+        ++cellCount;
         return new Cell
                 .Builder()
                 .withState(state)

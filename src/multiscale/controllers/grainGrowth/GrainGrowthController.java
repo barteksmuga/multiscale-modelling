@@ -1,8 +1,10 @@
 package multiscale.controllers.grainGrowth;
 
+import javafx.animation.Animation;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -13,6 +15,7 @@ import multiscale.enums.grainGrowth.BoundaryConditionEnum;
 import multiscale.enums.grainGrowth.InsertModeEnum;
 import multiscale.enums.grainGrowth.NeighbourhoodEnum;
 import multiscale.models.Grid;
+import multiscale.processors.monteCarlo.MonteCarloDTO;
 import multiscale.services.GridPaneService;
 import multiscale.services.Service;
 import multiscale.services.grainGrowth.GrainGrowthService;
@@ -34,10 +37,13 @@ public class GrainGrowthController {
     @FXML TextField heightField;
     @FXML TextField widthField;
     @FXML ChoiceBox<String> insertModeChoiceBox;
+    @FXML CheckBox monteCarloCheckBox;
+    @FXML TextField mcIterationInput;
 
     private Grid grid;
     private GridPaneService gridPaneService;
     private Service service;
+    private MonteCarloDTO monteCarloDTO;
 
     @FXML
     public void initialize() {
@@ -45,7 +51,10 @@ public class GrainGrowthController {
         insertModeChoiceBox.setItems(ChoiceBoxOptions.insertModeList());
         boundaryConditionChoiceBox.setItems(ChoiceBoxOptions.boundaryConditionList());
         neighbourhoodChoiceBox.setItems(ChoiceBoxOptions.neighbourhoodList());
+        mcIterationInput.setVisible(false);
         initializeInsertModeChoiceBoxListener();
+        initializeCheckBox();
+        monteCarloDTO = new MonteCarloDTO();
 
         //todo remove hardcoded options!!
         boundaryConditionChoiceBox.setValue(BoundaryConditionEnum.PERIODICAL.getName());
@@ -58,7 +67,11 @@ public class GrainGrowthController {
     public void start(ActionEvent actionEvent) {
         NeighbourhoodEnum neighbourhoodStrategyEnum = getNeighbourhoodStrategyEnum();
         BoundaryConditionEnum boundaryConditionEnum = getBoundaryConditionEnum();
-        service = new GrainGrowthService(grid, drawGridArea, neighbourhoodStrategyEnum, boundaryConditionEnum);
+        if (monteCarloDTO.isProcess()) {
+            monteCarloDTO.setIteration(mcIterationInput.getText() == null ? 0 : Integer.valueOf(mcIterationInput.getText()));
+        }
+        service = new GrainGrowthService(grid, drawGridArea, neighbourhoodStrategyEnum, boundaryConditionEnum,
+                monteCarloDTO);
         service.run();
     }
 
@@ -70,6 +83,14 @@ public class GrainGrowthController {
         String chosenBC = boundaryConditionChoiceBox.getSelectionModel().getSelectedItem();
         BoundaryConditionEnum chosenEnum = BoundaryConditionEnum.get(chosenBC);
         return chosenEnum == null ? BoundaryConditionEnum.PERIODICAL : chosenEnum;
+    }
+
+    private void initializeCheckBox() {
+        monteCarloCheckBox.selectedProperty()
+                .addListener((observable, oldValue, newValue) -> {
+                    mcIterationInput.setVisible(newValue);
+                    monteCarloDTO.setProcess(newValue);
+                });
     }
 
     public void wipeData(ActionEvent actionEvent) {

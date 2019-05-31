@@ -12,6 +12,31 @@ public class MooreNeighbourhoodStrategy extends NeighbourhoodStrategy {
     }
 
     @Override
+    protected void collectNeighbours(int x, int y) {
+        Cell current = grid.getGrid()[getY(y)][getX(x)];
+        int[][] neighbours = {
+                {
+                        grid.getGrid()[getY(y - 1)][getX(x - 1)].getcId(),
+                        grid.getGrid()[getY(y - 1)][getX(x)].getcId(),
+                        grid.getGrid()[getY(y - 1)][getX(x + 1)].getcId()
+                },
+                {
+                        grid.getGrid()[getY(y)][getX(x - 1)].getcId(),
+                        -1,
+                        grid.getGrid()[getY(y)][getX(x + 1)].getcId()
+
+                },
+                {
+                        grid.getGrid()[getY(y + 1)][getX(x - 1)].getcId(),
+                        grid.getGrid()[getY(y + 1)][getX(x)].getcId(),
+                        grid.getGrid()[getY(y + 1)][getX(x + 1)].getcId()
+                },
+        };
+
+        addToNeighbourMap(current.getcId(), neighbours);
+    }
+
+    @Override
     public void countNeighbourStates(int x, int y, Cell[][] grid) {
         int correctPreviousX = getX(x - 1);
         int correctFollowingX = getX(x + 1);

@@ -23,6 +23,7 @@ public class Cell extends StackPane {
 
     private Rectangle rectangle;
     private ModeEnum mode;
+    private int[][] neighbourIds;
 
     public Cell(Cell cell) {
         this.state = cell.getState();
@@ -54,6 +55,14 @@ public class Cell extends StackPane {
 
     public int getState() {
         return state;
+    }
+
+    public void setNeighbourIds(int[][] neighbourIds) {
+        this.neighbourIds = neighbourIds;
+    }
+
+    public int[][] getNeighbourIds() {
+        return neighbourIds;
     }
 
     private void incrementState() {

@@ -5,13 +5,21 @@ import multiscale.enums.grainGrowth.BoundaryConditionEnum;
 import multiscale.enums.grainGrowth.NeighbourhoodEnum;
 import multiscale.models.Cell;
 import multiscale.models.Grid;
+import multiscale.processors.monteCarlo.MonteCarloDTO;
+import multiscale.processors.monteCarlo.MonteCarloProcessor;
 import multiscale.services.Service;
 
 public class GrainGrowthService extends Service {
+    private NeighbourhoodEnum neighbourhoodEnum;
+    private BoundaryConditionEnum boundaryConditionEnum;
+    private MonteCarloDTO monteCarloDTO;
 
     public GrainGrowthService(Grid grid, GridPane gridPane, NeighbourhoodEnum neighbourhoodEnum,
-                              BoundaryConditionEnum boundaryConditionEnum) {
+                              BoundaryConditionEnum boundaryConditionEnum, MonteCarloDTO monteCarloDTO) {
         super(grid, gridPane, neighbourhoodEnum, boundaryConditionEnum);
+        this.neighbourhoodEnum = neighbourhoodEnum;
+        this.boundaryConditionEnum = boundaryConditionEnum;
+        this.monteCarloDTO = monteCarloDTO;
     }
 
     @Override
@@ -30,8 +38,20 @@ public class GrainGrowthService extends Service {
         appendToGrid();
         if (!isAnyEmptyCellLeft()) {
             timeline.stop();
-            System.out.println("timeline.stop()");
+            runMonteCarloIfRequested();
         }
+    }
+
+    private void runMonteCarloIfRequested() {
+        if (monteCarloDTO.isProcess()) {
+            System.out.println("CA finished -> starting monteCarlo");
+            runMonteCarloProcessing(monteCarloDTO);
+        }
+    }
+
+    private void runMonteCarloProcessing(MonteCarloDTO monteCarloDTO) {
+        var monteCarloProcessor = new MonteCarloProcessor(grid, gridPane, neighbourhoodEnum, boundaryConditionEnum, monteCarloDTO);
+        monteCarloProcessor.process();
     }
 
     private boolean isAnyEmptyCellLeft() {

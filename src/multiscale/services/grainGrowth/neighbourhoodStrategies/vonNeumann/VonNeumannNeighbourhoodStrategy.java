@@ -12,6 +12,29 @@ public class VonNeumannNeighbourhoodStrategy extends NeighbourhoodStrategy {
     }
 
     @Override
+    protected void collectNeighbours(int x, int y) {
+        Cell current = grid.getGrid()[getY(y)][getX(x)];
+        int[][] neighbours = {
+                {
+                        -1,
+                        grid.getGrid()[getY(y - 1)][getX(x)].getcId(),
+                        -1,
+                },
+                {
+                        grid.getGrid()[getY(y)][getX(x - 1)].getcId(),
+                        -1,
+                        grid.getGrid()[getY(y)][getX(x + 1)].getcId(),
+                },
+                {
+                        -1,
+                        grid.getGrid()[getY(y + 1)][getX(x)].getcId(),
+                        -1
+                }
+        };
+        addToNeighbourMap(current.getcId(), neighbours);
+    }
+
+    @Override
     public void countNeighbourStates(int x, int y, Cell[][] localGrid) {
         int correctPreviousX = getX(x - 1);
         addToMap(localGrid[y][correctPreviousX].getState());

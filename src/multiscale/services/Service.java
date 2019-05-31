@@ -79,9 +79,7 @@ public abstract class Service {
     }
 
     private void initializeTimeline() {
-        timeline = new Timeline(new KeyFrame(Duration.millis(INTERVAL), event -> {
-            nextStep();
-        }));
+        timeline = new Timeline(new KeyFrame(Duration.millis(INTERVAL), event -> nextStep()));
         timeline.setCycleCount(Animation.INDEFINITE);
     }
 
@@ -93,6 +91,10 @@ public abstract class Service {
     public void stop() {
         System.out.println("timeline.stop()");
         timeline.stop();
+    }
+
+    public Animation.Status getTimelineStatus() {
+        return timeline.getStatus();
     }
 
     protected abstract void nextStep();

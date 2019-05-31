@@ -21,6 +21,11 @@ public class PentagonalNeighbourhoodStrategy extends NeighbourhoodStrategy {
     }
 
     @Override
+    protected void collectNeighbours(int x, int y) {
+
+    }
+
+    @Override
     public void countNeighbourStates(int x, int y, Cell[][] localGrid) {
         int option = random.nextInt(4);
         switch (option) {

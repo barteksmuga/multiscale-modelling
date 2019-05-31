@@ -9,6 +9,7 @@ import java.util.Random;
 
 public class HexagonalNeighbourhoodStrategy extends NeighbourhoodStrategy {
     private Random random;
+    private int option;
 
     public HexagonalNeighbourhoodStrategy(Grid grid, BoundaryCondition boundaryCondition) {
         super(grid, boundaryCondition);
@@ -16,8 +17,13 @@ public class HexagonalNeighbourhoodStrategy extends NeighbourhoodStrategy {
     }
 
     @Override
+    protected void collectNeighbours(int x, int y) {
+
+    }
+
+    @Override
     public void countNeighbourStates(int x, int y, Cell[][] localGrid) {
-        int option = random.nextInt(2);
+        option = random.nextInt(2);
         boolean left = option == 0;
         countLeftOrRightOption(x, y, localGrid, left);
     }
