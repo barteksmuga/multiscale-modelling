@@ -7,7 +7,9 @@ public enum NeighbourhoodEnum {
     VON_NEUMANN("von Neumanna"),
     MOORE("Moore'a"),
     PENTAGONAL("Pentagonalne"),
-    HEXAGONAL("Heksagonalne"),
+    HEXAGONAL("Heksagonalne losowe"),
+    HEXAGONAL_LEFT("Heksagonalne lewe"),
+    HEXAGONAL_RIGHT("Heksagonalne prawe"),
     RADIUS("Promień");
 
     private String name;

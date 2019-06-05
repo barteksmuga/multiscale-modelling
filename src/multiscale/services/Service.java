@@ -70,12 +70,22 @@ public abstract class Service {
             case RADIUS:
 //                return
             case HEXAGONAL:
-                return new HexagonalNeighbourhoodStrategy(grid, boundaryCondition);
+            case HEXAGONAL_LEFT:
+            case HEXAGONAL_RIGHT:
+                return getHexagonalNeighbourhoodStrategy(neighbourhoodEnum);
             case PENTAGONAL:
                 return new PentagonalNeighbourhoodStrategy(grid, boundaryCondition);
             default:
                 return new VonNeumannNeighbourhoodStrategy(grid, boundaryCondition);
         }
+    }
+
+    private NeighbourhoodStrategy getHexagonalNeighbourhoodStrategy(NeighbourhoodEnum neighbourhoodEnum) {
+        boolean isLeft = neighbourhoodEnum.equals(NeighbourhoodEnum.HEXAGONAL_LEFT);
+        boolean isRight = neighbourhoodEnum.equals(NeighbourhoodEnum.HEXAGONAL_RIGHT);
+        boolean isRandom = neighbourhoodEnum.equals(NeighbourhoodEnum.HEXAGONAL);
+
+        return new HexagonalNeighbourhoodStrategy(grid, boundaryCondition, isLeft, isRight, isRandom);
     }
 
     private void initializeTimeline() {
