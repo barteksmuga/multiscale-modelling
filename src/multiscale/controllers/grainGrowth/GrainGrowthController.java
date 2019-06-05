@@ -3,6 +3,7 @@ package multiscale.controllers.grainGrowth;
 import javafx.animation.Animation;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
@@ -102,7 +103,9 @@ public class GrainGrowthController {
         int gridHeight = Integer.valueOf(heightField.getText());
 
         grid = new Grid(gridWidth, gridHeight, ModeEnum.GRAIN_GROWTH);
-        applyChosenInsertMode();
+        if (applyChosenInsertMode()) {
+            return;
+        }
         gridPaneService.drawArrayOnGridPane(drawGridArea, grid);
     }
 
@@ -142,24 +145,41 @@ public class GrainGrowthController {
                 });
     }
 
-    private void applyChosenInsertMode() {
+    private boolean applyChosenInsertMode() {
         String insertMode = insertModeChoiceBox.getSelectionModel().getSelectedItem();
         InsertModeEnum insertModeEnum = InsertModeEnum.get(insertMode);
         insertModeEnum = insertModeEnum == null ? InsertModeEnum.CUSTOM : insertModeEnum;
         int grainNumber;
+        String result;
         switch (insertModeEnum) {
             case RANDOM:
                 grainNumber = Integer.valueOf(grainNumberField.getText());
                 InsertModeHelper.applyRandomInsertMode(grid, grainNumber);
-                break;
+                return false;
             case RANDOM_WITH_RADIUS:
-                break;
+//                grainNumber = Integer.valueOf(grainNumberField.getText());
+//                int radius = Integer.valueOf(radiusField.getText());
+//                result = InsertModeHelper.applyRandomWithRadiusInsertMode(grid, grainNumber, radius);
+//                return openAlert(result);
+                return true;
             case HOMOGENEOUS:
                 int rowGrainNumber = Integer.valueOf(grainNumberField.getText());
                 int columnGrainNumber = Integer.valueOf(radiusField.getText());
-                InsertModeHelper.applyHomogeneousInsertMode(grid, rowGrainNumber, columnGrainNumber);
-                break;
+                result = InsertModeHelper.applyHomogeneousInsertMode(grid, rowGrainNumber, columnGrainNumber);
+                return openAlert(result);
         }
+        return false;
+    }
+
+    private boolean openAlert(String result) {
+        if (result != null) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setHeaderText(result);
+            alert.setContentText("Wprowadź inną liczbę ziaren");
+            alert.showAndWait();
+            return true;
+        }
+        return false;
     }
 
 
