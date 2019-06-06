@@ -26,7 +26,46 @@ public class HexagonalNeighbourhoodStrategy extends NeighbourhoodStrategy {
 
     @Override
     protected void collectNeighbours(int x, int y) {
-
+        Cell current = grid.getGrid()[y][x];
+        if (isLeft || option == 0) {
+            int[][] leftNeighbours = {
+                    {
+                            -1,
+                            grid.getGrid()[getY(y - 1)][getX(x)].getcId(),
+                            grid.getGrid()[getY(y - 1)][getX(x + 1)].getcId(),
+                    },
+                    {
+                            grid.getGrid()[getY(y)][getX(x - 1)].getcId(),
+                            -1,
+                            grid.getGrid()[getY(y)][getX(x + 1)].getcId()
+                    },
+                    {
+                            grid.getGrid()[getY(y + 1)][getX(x - 1)].getcId(),
+                            grid.getGrid()[getY(y + 1)][getX(x)].getcId(),
+                            -1
+                    }
+            };
+            addToNeighbourMap(current.getcId(), leftNeighbours);
+        } else {
+            int[][] rightNeighbours = {
+                    {
+                            grid.getGrid()[getY(y - 1)][getX(x - 1)].getcId(),
+                            grid.getGrid()[getY(y - 1)][getX(x)].getcId(),
+                            -1
+                    },
+                    {
+                            grid.getGrid()[getY(y)][getX(x - 1)].getcId(),
+                            -1,
+                            grid.getGrid()[getY(y)][getX(x + 1)].getcId()
+                    },
+                    {
+                            -1,
+                            grid.getGrid()[getY(y + 1)][getX(x)].getcId(),
+                            grid.getGrid()[getY(y + 1)][getX(x + 1)].getcId()
+                    }
+            };
+            addToNeighbourMap(current.getcId(), rightNeighbours);
+        }
     }
 
     @Override

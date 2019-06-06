@@ -14,6 +14,7 @@ public class PentagonalNeighbourhoodStrategy extends NeighbourhoodStrategy {
     private static final int UP_ID = 2;
     private static final int DOWN_ID = 3;
     private Random random;
+    private int option;
 
     public PentagonalNeighbourhoodStrategy(Grid grid, BoundaryCondition boundaryCondition) {
         super(grid, boundaryCondition);
@@ -22,12 +23,98 @@ public class PentagonalNeighbourhoodStrategy extends NeighbourhoodStrategy {
 
     @Override
     protected void collectNeighbours(int x, int y) {
+        Cell current = grid.getGrid()[y][x];
+        switch (option) {
+            case LEFT_ID:
+                int[][] leftNeighbours = {
+                        {
+                            grid.getGrid()[getY(y-1)][getX(x-1)].getcId(),
+                            grid.getGrid()[getY(y-1)][getX(x)].getcId(),
+                                -1
 
+                        },
+                        {
+                                grid.getGrid()[getY(y)][getX(x-1)].getcId(),
+                                -1,
+                                -1
+                        },
+                        {
+                                grid.getGrid()[getY(y+1)][getX(x-1)].getcId(),
+                                grid.getGrid()[getY(y+1)][getX(x)].getcId(),
+                                -1
+                        },
+                };
+                addToNeighbourMap(current.getcId(), leftNeighbours);
+                return;
+            case RIGHT_ID:
+                int[][] rightNeighbours = {
+                        {
+                                -1,
+                                grid.getGrid()[getY(y-1)][getX(x+1)].getcId(),
+                                grid.getGrid()[getY(y-1)][getX(x)].getcId()
+
+                        },
+                        {
+                                -1,
+                                -1,
+                                grid.getGrid()[getY(y)][getX(x+1)].getcId()
+                        },
+                        {
+                                -1,
+                                grid.getGrid()[getY(y+1)][getX(x)].getcId(),
+                                grid.getGrid()[getY(y+1)][getX(x+1)].getcId(),
+                        },
+                };
+                addToNeighbourMap(current.getcId(), rightNeighbours);
+                return;
+            case UP_ID:
+                int[][] upNeighbours = {
+                        {
+                                grid.getGrid()[getY(y-1)][getX(x-1)].getcId(),
+                                grid.getGrid()[getY(y-1)][getX(x)].getcId(),
+                                grid.getGrid()[getY(y-1)][getX(x+1)].getcId()
+
+                        },
+                        {
+                                grid.getGrid()[getY(y)][getX(x-1)].getcId()
+                                -1,
+                                grid.getGrid()[getY(y)][getX(x+1)].getcId()
+                        },
+                        {
+                                -1,
+                                -1,
+                                -1
+                        },
+                };
+                addToNeighbourMap(current.getcId(), upNeighbours);
+                return;
+            case DOWN_ID:
+                int[][] downNeighbours = {
+                        {
+                                -1,
+                                -1,
+                                -1
+                        },
+                        {
+                                grid.getGrid()[getY(y)][getX(x-1)].getcId(),
+                                -1,
+                                grid.getGrid()[getY(y)][getX(x+1)].getcId()
+
+                        },
+                        {
+                                grid.getGrid()[getY(y-1)][getX(x-1)].getcId(),
+                                grid.getGrid()[getY(y-1)][getX(x)].getcId(),
+                                grid.getGrid()[getY(y-1)][getX(x+1)].getcId()
+                        },
+                };
+                addToNeighbourMap(current.getcId(), downNeighbours);
+                return;
+        }
     }
 
     @Override
     public void countNeighbourStates(int x, int y, Cell[][] localGrid) {
-        int option = random.nextInt(4);
+        option = random.nextInt(4);
         switch (option) {
             case LEFT_ID:
                 countLeftOrRightOption(x, y, localGrid, true);
@@ -64,9 +151,9 @@ public class PentagonalNeighbourhoodStrategy extends NeighbourhoodStrategy {
     private void countUpOrDownOption(int x, int y, Cell[][] localGrid, boolean isUp) {
         int besideY;
         if (isUp) {
-            besideY = getY(y-1);
+            besideY = getY(y - 1);
         } else {
-            besideY = getY(y+1);
+            besideY = getY(y + 1);
         }
         int leftX = getX(x - 1);
         int rightX = getX(x + 1);

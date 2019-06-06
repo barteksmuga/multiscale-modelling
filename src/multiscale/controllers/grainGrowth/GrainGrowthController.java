@@ -35,6 +35,7 @@ public class GrainGrowthController {
     @FXML Button startSimulationButton;
     @FXML Button stopSimulationButton;
     @FXML Button wipeResultsButton;
+    @FXML Button changeViewButton;
     @FXML TextField heightField;
     @FXML TextField widthField;
     @FXML ChoiceBox<String> insertModeChoiceBox;
@@ -60,9 +61,12 @@ public class GrainGrowthController {
         //todo remove hardcoded options!!
         boundaryConditionChoiceBox.setValue(BoundaryConditionEnum.PERIODICAL.getName());
         neighbourhoodChoiceBox.setValue(NeighbourhoodEnum.VON_NEUMANN.getName());
-        insertModeChoiceBox.setValue(InsertModeEnum.CUSTOM.getName());
+        insertModeChoiceBox.setValue(InsertModeEnum.RANDOM.getName());
+        grainNumberField.setText("100");
         widthField.setText("50");
         heightField.setText("50");
+        mcIterationInput.setText("50");
+        monteCarloCheckBox.setSelected(true);
     }
 
     public void start(ActionEvent actionEvent) {
@@ -187,5 +191,10 @@ public class GrainGrowthController {
         String selectedNeighbourhood = neighbourhoodChoiceBox.getSelectionModel().getSelectedItem();
         NeighbourhoodEnum selectedNeighbourhoodEnum = NeighbourhoodEnum.get(selectedNeighbourhood);
         return selectedNeighbourhoodEnum == null ? NeighbourhoodEnum.VON_NEUMANN : selectedNeighbourhoodEnum;
+    }
+
+    public void changeView(ActionEvent actionEvent) {
+        grid.revertView();
+        gridPaneService.drawArrayOnGridPane(drawGridArea, grid);
     }
 }

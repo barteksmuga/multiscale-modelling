@@ -31,5 +31,6 @@
         <Button fx:id="stopSimulationButton" layoutX="13.0" layoutY="574.0" mnemonicParsing="false" onAction="#stop" prefHeight="27.0" prefWidth="135.0" text="Stop" />
       <CheckBox fx:id="monteCarloCheckBox" layoutX="17.0" layoutY="465.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="135.0" text="Monte Carlo" />
       <TextField fx:id="mcIterationInput" layoutX="14.0" layoutY="499.0" prefHeight="27.0" prefWidth="135.0" />
+      <Button fx:id="changeViewButton" layoutX="13.0" layoutY="688.0" mnemonicParsing="false" onAction="#changeView" prefHeight="27.0" prefWidth="135.0" text="Zmien widok" />
     </children>
 </Pane>

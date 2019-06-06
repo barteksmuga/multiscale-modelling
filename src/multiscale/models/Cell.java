@@ -17,9 +17,13 @@ import static multiscale.enums.StateEnum.INACTIVE;
 public class Cell extends StackPane {
     private static final AtomicInteger idGenerator = new AtomicInteger(1);
     private static int currentState = 0;
+    private static double maxEnergy = 0.0;
+
     private int state;
     private int cId;
     private Point point;
+    private double energy;
+    private Color energyColor = new Color(0,1,0, 1);
 
     private Rectangle rectangle;
     private ModeEnum mode;
@@ -31,6 +35,7 @@ public class Cell extends StackPane {
         this.point = cell.getPoint();
         this.rectangle = cell.getRectangle();
         this.mode = cell.getMode();
+        this.energy = cell.getEnergy();
     }
 
     private Cell(Builder builder) {
@@ -39,6 +44,7 @@ public class Cell extends StackPane {
         this.rectangle = builder.rectangle;
         this.point = builder.point;
         this.mode = builder.mode;
+        this.energy = 0.0;
         initializeRectangle();
         setOnMouseClicked(event -> {
             if (event.getButton().equals(MouseButton.PRIMARY)) {
@@ -47,6 +53,31 @@ public class Cell extends StackPane {
                 rightButtonClicked();
             }
         });
+    }
+
+    public double getEnergy() {
+        return energy;
+    }
+
+    public void setEnergy(double energy) {
+        this.energy = energy;
+        if (energy > maxEnergy) {
+            maxEnergy = energy;
+        }
+        if (energy == 0) {
+            energyColor = new Color(0,1,0,1);
+            return;
+        }
+        double red = energy / (maxEnergy);
+        energyColor = new Color(Math.min(red, 1),0,0,1);
+    }
+
+    public void swapStateAndEnergy(boolean isDisplayingState) {
+        if (isDisplayingState) {
+            rectangle.setFill(energyColor);
+        } else {
+            updateRectangle();
+        }
     }
 
     public int getcId() {

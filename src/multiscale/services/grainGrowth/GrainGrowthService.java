@@ -37,7 +37,7 @@ public class GrainGrowthService extends Service {
         }
         appendToGrid();
         if (!isAnyEmptyCellLeft()) {
-            timeline.stop();
+            stop();
             runMonteCarloIfRequested();
         }
     }

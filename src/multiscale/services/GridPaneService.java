@@ -13,6 +13,7 @@ public class GridPaneService {
     }
 
     public void drawArrayOnGridPane(GridPane gridPane, Grid grid) {
+//        gridPane.getChildren().clear();
         var toAdd = new ArrayList<Cell>();
         for (int y = 0; y<grid.getHeight(); ++y) {
             for (int x=0; x<grid.getWidth(); ++x) {

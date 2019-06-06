@@ -1,6 +1,5 @@
 package multiscale.processors.monteCarlo;
 
-import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.layout.GridPane;
@@ -9,19 +8,22 @@ import multiscale.enums.grainGrowth.BoundaryConditionEnum;
 import multiscale.enums.grainGrowth.NeighbourhoodEnum;
 import multiscale.models.Cell;
 import multiscale.models.Grid;
+import multiscale.models.Point;
 import multiscale.services.Service;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
-
-import static multiscale.constants.WindowConstants.INTERVAL;
 
 public class MonteCarloProcessor extends Service {
     private Map<Integer, Cell> processedCellMap;
     private MonteCarloDTO dto;
+    private List<Point> cellsOnGrainBorders;
 
     private Timeline timeline;
+    private static int count = 0;
 
     public MonteCarloProcessor(Grid grid, GridPane gridPane, NeighbourhoodEnum neighbourhoodEnum,
                                BoundaryConditionEnum boundaryConditionEnum, MonteCarloDTO dto) {
@@ -29,10 +31,11 @@ public class MonteCarloProcessor extends Service {
         this.processedCellMap = new HashMap<>();
         this.dto = dto;
         initializeTimeline();
+        this.cellsOnGrainBorders = new LinkedList<>();
     }
 
     private void initializeTimeline() {
-        timeline = new Timeline(new KeyFrame(Duration.millis(50), actionEvent -> nextStep()));
+        timeline = new Timeline(new KeyFrame(Duration.millis(500), actionEvent -> nextStep()));
         timeline.setCycleCount(dto.getIteration());
     }
 
@@ -43,27 +46,57 @@ public class MonteCarloProcessor extends Service {
 
     @Override
     public void nextStep() {
-        System.out.println("processIteration");
-        Cell current = getRandomCell();
-        Cell[][] neighbours = neighbourhoodStrategy.getNeighbourMap(current);
+        System.out.println("processIteration : " + ++count);
+        initCellOnGrainBorderList();
+        int size = cellsOnGrainBorders.size();
+        while (processedCellMap.size() < cellsOnGrainBorders.size()) {
+            Cell current = getRandomCell();
+            Cell[][] neighbours = neighbourhoodStrategy.getNeighbourMap(current);
 
-        double currentCellEnergy = 0;
-        calculateEnergy(current, neighbours, currentCellEnergy);
+            double currentCellEnergy = calculateEnergy(current, neighbours);
+            if (currentCellEnergy == 0) {
+                cellsOnGrainBorders.remove(current.getPoint());
+                continue;
+            }
+            Cell neighbour = getRandomNeighbour(current, neighbours);
+            double neighbourEnergy = calculateEnergy(neighbour, neighbours);
 
-        Cell neighbour = getRandomNeighbour(current, neighbours);
-        double neighbourEnergy = 0;
-        calculateEnergy(neighbour, neighbours, neighbourEnergy);
+            var deltaEnergy = neighbourEnergy - currentCellEnergy;
+            var kt = getKtValue();
+            var probability = deltaEnergy <= 0 ? 1.0 : Math.exp(-deltaEnergy / kt);
+            var shot = getRandomDouble(0.0, 1.0);
 
-        var deltaEnergy = neighbourEnergy - currentCellEnergy;
-        var kt = getKtValue();
-        var probability = deltaEnergy <= 0 ? 1.0 : Math.exp(-deltaEnergy / kt);
-        var shot = getRandomDouble(0.0, 1.0);
-
-        if (shot <= probability) {
-            grid.getGrid()[current.getPoint().y][current.getPoint().x].setState(neighbour.getState());
-            appendToGrid();
+            current.setEnergy(currentCellEnergy);
+            if (deltaEnergy < 0) {
+                current.setState(neighbour.getState());
+                current.setEnergy(neighbourEnergy);
+                appendToGrid();
+            }
         }
+        processedCellMap.clear();
 
+    }
+
+    private void initCellOnGrainBorderList() {
+        for (Cell[] row: grid.getGrid()) {
+            for (Cell cell: row) {
+                Cell[][] neighbours = neighbourhoodStrategy.getNeighbourMap(cell);
+                if (anyNeighbourInDifferentState(cell, neighbours)) {
+                    cellsOnGrainBorders.add(cell.getPoint());
+                }
+            }
+        }
+    }
+
+    private boolean anyNeighbourInDifferentState(Cell currentCell, Cell[][] neighbours) {
+        for (Cell[] row: neighbours) {
+            for (Cell cell: row) {
+                if (cell != null && cell.getState() != currentCell.getState()) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private double getRandomDouble(double min, double max) {
@@ -87,14 +120,16 @@ public class MonteCarloProcessor extends Service {
         return anyNeighbour;
     }
 
-    private void calculateEnergy(Cell current, Cell[][] neighbours, double energy) {
-        for(Cell[] row : neighbours) {
-            for (Cell cell : row) {
+    private double calculateEnergy(Cell current, Cell[][] neighbours) {
+        double energy = 0;
+        for (Cell[] row: neighbours) {
+            for (Cell cell: row) {
                 if (cell != null && current.getState() != cell.getState()) {
                     energy++;
                 }
             }
         }
+        return energy;
     }
 
     private Cell getRandomCell() {
@@ -102,11 +137,12 @@ public class MonteCarloProcessor extends Service {
         Random random = new Random();
         Cell cell;
         do {
-            int x = random.nextInt(grid.getWidth());
-            int y = random.nextInt(grid.getHeight());
-            cell = grid.getGrid()[y][x];
+            int index = random.nextInt(cellsOnGrainBorders.size());
+            Point point = cellsOnGrainBorders.get(index);
+            cell = grid.getGrid()[point.y][point.x];
             isProcessed = addCellToMap(cell);
         } while (!isProcessed);
+        cellsOnGrainBorders.remove(cell.getPoint());
         return cell;
     }
 

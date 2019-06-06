@@ -22,6 +22,7 @@ public class Grid {
     private int ruleIndicator;
     private ModeEnum mode;
     private int cellCount;
+    private boolean isDisplayingState = true;
 
     public Grid(int width, int height, ModeEnum mode) {
         this.width = width;
@@ -55,6 +56,14 @@ public class Grid {
                 .filter(current -> current.getcId() == cId)
                 .findFirst();
         return cell.orElse(null);
+    }
+
+    public void revertView() {
+        Arrays.stream(grid)
+//                .parallel()
+                .flatMap(Arrays::stream)
+                .forEach(cell -> cell.swapStateAndEnergy(isDisplayingState));
+        isDisplayingState = !isDisplayingState;
     }
 
     public void setFirstRow(List<Cell> firstRow) {

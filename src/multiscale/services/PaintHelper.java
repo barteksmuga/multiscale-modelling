@@ -20,7 +20,7 @@ public class PaintHelper {
     private static Map<Integer, Color> initMapWithBasicColors() {
         var map = new HashMap<Integer, Color>();
         for (int i = 0; i < basicColors.size(); ++i) {
-            map.put((i-1), basicColors.get(i));
+            map.put((i-2), basicColors.get(i));
         }
         return map;
     }
@@ -52,9 +52,9 @@ public class PaintHelper {
 
     private static List<Color> initBasicColors() {
         var list = new ArrayList<Color>();
+        list.add(Color.RED);
         list.add(Color.WHITE);
         list.add(Color.GREEN);
-        list.add(Color.RED);
         return list;
     }
 }

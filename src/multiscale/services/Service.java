@@ -110,6 +110,7 @@ public abstract class Service {
     protected abstract void nextStep();
 
     protected void appendToGrid() {
+        System.err.println("grid update");
         gridPaneService.drawArrayOnGridPane(gridPane, grid);
     }
 
