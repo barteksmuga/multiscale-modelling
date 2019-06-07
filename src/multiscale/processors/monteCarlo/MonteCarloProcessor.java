@@ -9,6 +9,7 @@ import multiscale.enums.grainGrowth.NeighbourhoodEnum;
 import multiscale.models.Cell;
 import multiscale.models.Grid;
 import multiscale.models.Point;
+import multiscale.processors.drx.DrxProcessor;
 import multiscale.services.Service;
 
 import java.util.HashMap;
@@ -30,19 +31,24 @@ public class MonteCarloProcessor extends Service {
         super(grid, gridPane, neighbourhoodEnum, boundaryConditionEnum);
         this.processedCellMap = new HashMap<>();
         this.dto = dto;
-        initializeTimeline();
+        initializeTimeline(neighbourhoodEnum, boundaryConditionEnum);
         this.cellsOnGrainBorders = new LinkedList<>();
     }
 
-    private void initializeTimeline() {
+    private void initializeTimeline(NeighbourhoodEnum neighbourhoodEnum, BoundaryConditionEnum boundaryConditionEnum) {
         timeline = new Timeline(new KeyFrame(Duration.millis(500), actionEvent -> nextStep()));
         timeline.setCycleCount(dto.getIteration());
+
+        final var drxProcessor = new DrxProcessor(grid, gridPane, neighbourhoodEnum, boundaryConditionEnum);
+
+        timeline.setOnFinished(event -> {
+            drxProcessor.process();
+        });
     }
 
     public void process() {
         timeline.play();
     }
-
 
     @Override
     public void nextStep() {
@@ -80,27 +86,11 @@ public class MonteCarloProcessor extends Service {
     private void initCellOnGrainBorderList() {
         for (Cell[] row: grid.getGrid()) {
             for (Cell cell: row) {
-                Cell[][] neighbours = neighbourhoodStrategy.getNeighbourMap(cell);
-                if (anyNeighbourInDifferentState(cell, neighbours)) {
+                if (isOnGrainBound(cell)) {
                     cellsOnGrainBorders.add(cell.getPoint());
                 }
             }
         }
-    }
-
-    private boolean anyNeighbourInDifferentState(Cell currentCell, Cell[][] neighbours) {
-        for (Cell[] row: neighbours) {
-            for (Cell cell: row) {
-                if (cell != null && cell.getState() != currentCell.getState()) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    private double getRandomDouble(double min, double max) {
-        return min + (max - min) * new Random().nextDouble();
     }
 
     private double getKtValue() {

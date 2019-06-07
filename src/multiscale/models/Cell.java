@@ -18,12 +18,17 @@ public class Cell extends StackPane {
     private static final AtomicInteger idGenerator = new AtomicInteger(1);
     private static int currentState = 0;
     private static double maxEnergy = 0.0;
+    private static double maxDensity = 0.0;
 
     private int state;
     private int cId;
     private Point point;
     private double energy;
-    private Color energyColor = new Color(0,1,0, 1);
+    private Color energyColor = new Color(0, 1, 0, 1);
+    private double dislocationDensity;
+    private Color dislocationColor = new Color(0.5, 0.3, 0, 1);
+    private boolean isRecrystallized;
+    private double dislocationGradient;
 
     private Rectangle rectangle;
     private ModeEnum mode;
@@ -36,6 +41,7 @@ public class Cell extends StackPane {
         this.rectangle = cell.getRectangle();
         this.mode = cell.getMode();
         this.energy = cell.getEnergy();
+        this.energyColor = cell.getEnergyColor();
     }
 
     private Cell(Builder builder) {
@@ -44,19 +50,25 @@ public class Cell extends StackPane {
         this.rectangle = builder.rectangle;
         this.point = builder.point;
         this.mode = builder.mode;
-        this.energy = 0.0;
+        this.energy = builder.energy;
+        this.isRecrystallized = builder.isRecrystallized;
+        this.dislocationDensity = builder.dislocationDensity;
         initializeRectangle();
         setOnMouseClicked(event -> {
             if (event.getButton().equals(MouseButton.PRIMARY)) {
                 leftButtonClicked();
-            } else if (event.getButton().equals(MouseButton.SECONDARY)){
+            } else if (event.getButton().equals(MouseButton.SECONDARY)) {
                 rightButtonClicked();
             }
         });
     }
 
-    public double getEnergy() {
-        return energy;
+    public boolean isRecrystallized() {
+        return isRecrystallized;
+    }
+
+    public void setRecrystallized(boolean recrystallized) {
+        isRecrystallized = recrystallized;
     }
 
     public void setEnergy(double energy) {
@@ -65,18 +77,21 @@ public class Cell extends StackPane {
             maxEnergy = energy;
         }
         if (energy == 0) {
-            energyColor = new Color(0,1,0,1);
+            energyColor = new Color(0, 1, 0, 1);
             return;
         }
         double red = energy / (maxEnergy);
-        energyColor = new Color(Math.min(red, 1),0,0,1);
+        energyColor = new Color(Math.min(red, 1), 0, 0, 1);
     }
 
-    public void swapStateAndEnergy(boolean isDisplayingState) {
-        if (isDisplayingState) {
+    public void swapStateAndEnergy(int displayMode) {
+        if (displayMode == 1) {
             rectangle.setFill(energyColor);
+        } else if (displayMode == 2) {
+            rectangle.setFill(dislocationColor);
         } else {
             updateRectangle();
+
         }
     }
 
@@ -130,6 +145,10 @@ public class Cell extends StackPane {
     }
 
     private void updateRectangle() {
+        if (isRecrystallized) {
+            rectangle.setFill(new Color(1, Math.max(dislocationGradient, 0), 0, 1));
+            return;
+        }
         rectangle.setFill(Builder.getPaint(state));
     }
 
@@ -150,15 +169,47 @@ public class Cell extends StackPane {
         }
     }
 
+    public double getEnergy() {
+        return energy;
+    }
+
+    public Color getEnergyColor() {
+        return energyColor;
+    }
+
+    public double getDislocationDensity() {
+        return dislocationDensity;
+    }
+
+    public void addDislocationDensity(double dislocationDensity) {
+        if (dislocationDensity > maxDensity) {
+            maxDensity = dislocationDensity;
+        }
+        this.dislocationDensity += dislocationDensity;
+    }
+
+    public void recrystallize() {
+        this.isRecrystallized = true;
+        dislocationGradient = Math.min((this.dislocationDensity / maxDensity), 1.0);
+        this.dislocationDensity = 0;
+        updateRectangle();
+        this.dislocationColor = new Color(0, Math.max(dislocationGradient, 0), 0, 1);
+    }
+
     public static class Builder {
+
         private int state;
         private Rectangle rectangle;
         private Point point;
         private ModeEnum mode;
+        private double energy;
+        private double dislocationDensity;
+        private boolean isRecrystallized;
 
-        public Builder() {}
+        public Builder() {
+        }
 
-        public Builder withState (int state) {
+        public Builder withState(int state) {
             this.state = state;
             return this;
         }
@@ -179,13 +230,28 @@ public class Cell extends StackPane {
             return this;
         }
 
+        public Builder withEnergy(double energy) {
+            this.energy = energy;
+            return this;
+        }
+
+        public Builder withDislocationDensity(double dislocationDensity) {
+            this.dislocationDensity = dislocationDensity;
+            return this;
+        }
+
+        public Builder isRecrystallized(boolean isRecrystallized) {
+            this.isRecrystallized = isRecrystallized;
+            return this;
+        }
+
         public Cell build() {
             return new Cell(this);
         }
 
         private static Paint getPaint(int state) {
             Color color = PaintHelper.getColorForState(state);
-            return color.deriveColor(1,1,1,1);
+            return color.deriveColor(1, 1, 1, 1);
         }
     }
 

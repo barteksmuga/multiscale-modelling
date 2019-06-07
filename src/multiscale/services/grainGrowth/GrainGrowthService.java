@@ -5,6 +5,7 @@ import multiscale.enums.grainGrowth.BoundaryConditionEnum;
 import multiscale.enums.grainGrowth.NeighbourhoodEnum;
 import multiscale.models.Cell;
 import multiscale.models.Grid;
+import multiscale.processors.drx.DrxProcessor;
 import multiscale.processors.monteCarlo.MonteCarloDTO;
 import multiscale.processors.monteCarlo.MonteCarloProcessor;
 import multiscale.services.Service;
@@ -13,6 +14,7 @@ public class GrainGrowthService extends Service {
     private NeighbourhoodEnum neighbourhoodEnum;
     private BoundaryConditionEnum boundaryConditionEnum;
     private MonteCarloDTO monteCarloDTO;
+    private MonteCarloProcessor monteCarloProcessor;
 
     public GrainGrowthService(Grid grid, GridPane gridPane, NeighbourhoodEnum neighbourhoodEnum,
                               BoundaryConditionEnum boundaryConditionEnum, MonteCarloDTO monteCarloDTO) {
@@ -50,7 +52,7 @@ public class GrainGrowthService extends Service {
     }
 
     private void runMonteCarloProcessing(MonteCarloDTO monteCarloDTO) {
-        var monteCarloProcessor = new MonteCarloProcessor(grid, gridPane, neighbourhoodEnum, boundaryConditionEnum, monteCarloDTO);
+        monteCarloProcessor = new MonteCarloProcessor(grid, gridPane, neighbourhoodEnum, boundaryConditionEnum, monteCarloDTO);
         monteCarloProcessor.process();
     }
 

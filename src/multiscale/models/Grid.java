@@ -23,6 +23,7 @@ public class Grid {
     private ModeEnum mode;
     private int cellCount;
     private boolean isDisplayingState = true;
+    private int displayMode = 0;
 
     public Grid(int width, int height, ModeEnum mode) {
         this.width = width;
@@ -59,10 +60,14 @@ public class Grid {
     }
 
     public void revertView() {
+        ++displayMode;
+        if (displayMode > 2) {
+            displayMode = 0;
+        }
         Arrays.stream(grid)
 //                .parallel()
                 .flatMap(Arrays::stream)
-                .forEach(cell -> cell.swapStateAndEnergy(isDisplayingState));
+                .forEach(cell -> cell.swapStateAndEnergy(displayMode));
         isDisplayingState = !isDisplayingState;
     }
 
@@ -117,6 +122,9 @@ public class Grid {
                 .withRectangle(buildRectangle())
                 .withCoordinates(point)
                 .withMode(mode)
+                .withEnergy(0)
+                .withDislocationDensity(0)
+                .isRecrystallized(false)
                 .build();
     }
 

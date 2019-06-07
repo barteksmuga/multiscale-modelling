@@ -7,6 +7,7 @@ import javafx.scene.layout.GridPane;
 import javafx.util.Duration;
 import multiscale.enums.grainGrowth.BoundaryConditionEnum;
 import multiscale.enums.grainGrowth.NeighbourhoodEnum;
+import multiscale.models.Cell;
 import multiscale.models.Grid;
 import multiscale.services.boundaryConditions.AbsorbingBoundaryCondition;
 import multiscale.services.boundaryConditions.BoundaryCondition;
@@ -16,6 +17,8 @@ import multiscale.services.grainGrowth.neighbourhoodStrategies.hexagonal.Hexagon
 import multiscale.services.grainGrowth.neighbourhoodStrategies.moore.MooreNeighbourhoodStrategy;
 import multiscale.services.grainGrowth.neighbourhoodStrategies.pentagonal.PentagonalNeighbourhoodStrategy;
 import multiscale.services.grainGrowth.neighbourhoodStrategies.vonNeumann.VonNeumannNeighbourhoodStrategy;
+
+import java.util.Random;
 
 import static multiscale.constants.WindowConstants.INTERVAL;
 
@@ -120,5 +123,22 @@ public abstract class Service {
 
     protected int getY(int y) {
         return boundaryCondition.getY(y);
+    }
+
+
+    protected boolean isOnGrainBound(Cell currentCell) {
+        Cell[][] neighbours = neighbourhoodStrategy.getNeighbourMap(currentCell);
+        for (Cell[] row: neighbours) {
+            for (Cell cell: row) {
+                if (cell != null && cell.getState() != currentCell.getState()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    protected double getRandomDouble(double min, double max) {
+        return min + (max - min) * new Random().nextDouble();
     }
 }

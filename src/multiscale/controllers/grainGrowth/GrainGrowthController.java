@@ -1,6 +1,5 @@
 package multiscale.controllers.grainGrowth;
 
-import javafx.animation.Animation;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -65,7 +64,7 @@ public class GrainGrowthController {
         grainNumberField.setText("100");
         widthField.setText("50");
         heightField.setText("50");
-        mcIterationInput.setText("50");
+        mcIterationInput.setText("2");
         monteCarloCheckBox.setSelected(true);
     }
 
